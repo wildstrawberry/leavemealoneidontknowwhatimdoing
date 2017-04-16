@@ -1,9 +1,11 @@
 # folk examples from http://doc.sagemath.org/html/en/reference/curves/sage/schemes/hyperelliptic_curves/jacobian_generic.html
 
-q = 7
+q = 17
+TH = 56
 FF = FiniteField(q)
 R.<x> = PolynomialRing(FF)
-f = x**5 + 1184*x**3 + 1846*x**2 + 956*x + 560
+# the text book curve f = x**5 + 1184*x**3 + 1846*x**2 + 956*x + 560
+f = x**5 + 4*x**3 + 5*x
 C = HyperellipticCurve(f)
 n = C.count_points(1)
 print "number of points:", n, "factor n:", factor(n[0])
@@ -13,20 +15,30 @@ print "number of points:", n, "factor n:", factor(n[0])
 J = C.jacobian()
 X = J(FF)
 print "X:",X
+print "Frobenius:",C.frobenius_polynomial()
 
-counterJ=0
+# counterJ=0, fake counter
 # try to find points on jacobian by enumeration
-for i in range(q):
-    for j in range(q):
+for i in range(9):
+    for j in range(9):
         a = x**2 + i*x + j
         for k in range(q):
-            for l in range(q):
-                b = k*x + l
+            for l in range((q-1)/2):
+                b = k*x + l  # TBD: compute square root
                 try:
                     D = X([a,b])
+                    #counterJ=counterJ+1
                     print "ijkl:",i,j,k,l
-                    print "D:", D
-                    counterJ=counterJ+1
+                    cz = 2
+                    while (cz<TH):
+                        czD = cz*D
+                        if czD==D:
+                            print cz-1, D  # (cz-1)*D == (1)
+                            break
+                        else:
+                            cz=cz+1
+                    if cz == TH:
+                        print "order>",TH
                 except ValueError:
                     continue
-print counterJ
+#print counterJ, factor(counterJ)
