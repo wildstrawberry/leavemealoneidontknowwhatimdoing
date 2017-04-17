@@ -22,16 +22,16 @@ def find_points_with_given_order(x,ord):
 Z = E((5, 373))
 P = E((36, 60))
 Q = E((121, 387))
-n = 5
+n = 2
 S = E((0, 36))
 
 print "Z =", Z.xy()
 print "P =", P.xy()
 print "Q =", Q.xy()
-print "#P = #Q =", P.order(), Z.order()
+print "order of P = ", P.order(), "; order of Z = ", Z.order()
 
 for i in range(1,10):
-        print (P*i), (Q*i), (S*i)
+        print (P*i), (Q*i), (Z*i)
 
 var('x y')
 
@@ -61,6 +61,7 @@ def miller(m, P):
 
 def eval_miller(P, Q):
 	f = miller(n, P)
+        print "f:", f, "P:", P
 	(x1, y1) = Q.xy()
 	return f(x = x1, y = y1)
 
@@ -74,13 +75,13 @@ def weil_pairing(P, Q):
 	den = eval_miller(Q, P)
 	return ((-1)**n)*(num/den)
 
-e = weil_pairing(P, Z)
+e = weil_pairing(P, Q)
 print "e(P, Q) =", e
 
 # e^n = 1
 print "e(P, Q)^n =", e^n
 
-P3 = Z * 3
+P3 = P * 3
 Q4 = Q * 4
 e12 = weil_pairing(P3, Q4)
 
