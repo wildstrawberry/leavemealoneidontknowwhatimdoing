@@ -3,19 +3,21 @@
 # manually forked from https://github.com/guanzhi/CryptoWithSageMath
 
 # E: y^2 = x^3 + 30x + 34 mod 631
+#E(K) = 5x130
 
 p = 631
 K = GF(p)
 a = 30
 b = 34
 E = EllipticCurve(K, [a, b])
+print E.count_points(1)
 
 def find_points_with_given_order(x,ord):
     y2 = K(x^3 + a*x + b)
     yr = K(y2).nth_root(2)
     return yr
 
-print find_points_with_given_order(5,5)
+#print find_points_with_given_order(5,5)
     
 Z = E((5, 373))
 P = E((36, 60))
