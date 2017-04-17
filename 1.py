@@ -22,7 +22,7 @@ def find_points_with_given_order(x,ord):
 Z = E((5, 373))
 P = E((36, 60))
 Q = E((121, 387))
-n = 2
+n = 5
 S = E((0, 36))
 
 print "Z =", Z.xy()
@@ -57,6 +57,12 @@ def miller(m, P):
 		if int(m[i]) == 1:
 			f = f * g(T, P)
 			T = T + P
+	return f
+
+def muller(m, P):
+    # compute f_m,P by bruteforce, no?
+	(x1, y1) = P.xy()
+        f=((x-x1)**m) *((-x/y)**m)
 	return f
 
 def eval_miller(P, Q):
