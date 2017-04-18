@@ -60,9 +60,9 @@ def miller(m, P):
 	return f
 
 def muller(m, P):
-    # compute f_m,P by bruteforce, no?
+    # compute f_m,P by bruteforce, but ...
 	(x1, y1) = P.xy()
-        f=((x-x1)**m) *((-x/y)**m)
+        f=((x-x1)**m) *((-x/y)**m)  # this is the wrong formula, in a downtoearth term, div(x-x1) = (P)+(-P)-2(infty)
 	return f
 
 def eval_miller(P, Q):
