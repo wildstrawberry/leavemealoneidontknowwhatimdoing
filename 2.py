@@ -79,6 +79,8 @@ b1 = 11*x + 6
 a2 = x^2 + 8*x + 3
 b2 = 12*x + 3
 
+print (a1/a2)%(b1)
+
 D1 = X([a1,b1])
 D2 = X([a2,b2])
 ide = X([1,0])
@@ -89,11 +91,22 @@ print Jacobian_order(E)
 
 def MillerH(u1, v1, u2, v2, uE, vE):
     """ Input: D1 = [u1, v1], D2 = [u2, v2], E = [uE, vE].
-        Output: Reduced divisor ρ(D1 + D2) and evaluation h^norm_{D1,D2}(E), represented by [h˜1(x), h˜2(x),h3].  """
+        Output: Reduced divisor ρ(D1 + D2) and evaluation h^norm_{D1,D2}(E), represented by [h˜1(x), h˜2(x),h3].
+        H=0
+    """
     d1, e1, e2 = xgcd(u1,u2)
+    d, c1, c2 = xgcd(d1,v1+v2)
+    h1 = d % uE
+    h2 = 1
+    h3 = 1
+    s1 = c1*e1
+    s2 = c1*e2
+    s3 = c2
+    u = u1*u2/d/d
+    v = ((s1*u1*v2+s2*u2*v1+s3*(v1*v2+f))/d)%u  # we have gcd, so they must work
 
 
-MillerH(a1, b1, a2, b2, a1, b1)
+#MillerH(a1, b1, a2, b2, a1, b1)
 
 def miller(m, P):
     """ miller's algorithm for hyperelliptic curve pairing  """
