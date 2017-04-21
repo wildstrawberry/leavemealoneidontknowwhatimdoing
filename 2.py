@@ -1,10 +1,10 @@
 # HE pairing according to http://homes.esat.kuleuven.be/~fvercaut/papers/pairing2007.pdf
 
 q = 13
-# f = x**5 + 2*x**3 + (16)*x,   q=13, seems to have torsion point of rank 3, 
+# f = x**5 + 2*x**3 + (16)*x,   q = 13, seems to have torsion point of rank 3, 
 # (x^2 + x + 9, y + 5*x + 8) (x^2 + 12*x + 9, y + 12*x + 12)
-# f = x**5 + 4*x**3 + (2401)*x, q=31, seems to be 12x30x120, not useful
-# f = x**5 + 4*x**3 + (2401)*x, q=13, seems to be 2x10x20, not useful
+# f = x**5 + 4*x**3 + (2401)*x, q = 31, seems to be 12x30x120, not useful
+# f = x**5 + 4*x**3 + (2401)*x, q = 13, seems to be 2x10x20, not useful
 
 TH = 10000  # threshold order
 
@@ -61,7 +61,7 @@ def Jacobian_enumeratepoints():
 a1 = x^2 + x + 9
 b1 = 8*x + 5
 a2 = x^2 + 12*x + 9
-b2 = x + 1
+b2 = 12*x + 12
 
 D1 = X([a1,b1])
 D2 = X([a2,b2])
@@ -76,25 +76,26 @@ def MillerH(u1, v1, u2, v2, uE, vE):
     d1, e1, e2 = xgcd(u1,u2)
     d, c1, c2 = xgcd(d1,v1+v2)
     h1 = d % uE
-    print "h1:", h1
+    print "h1, uE, d:", h1, uE, d
     h2 = 1
     h3 = 1
     s1 = c1*e1
     s2 = c1*e2
     s3 = c2
-    u = u1*u2/(d*d)
-    print "u,d", u, d
-    v = (s1*u1*v2 + s2*u2*v1 + s3*(v1*v2 + f))/d
-    print "v=", v
-    v = v%u  # we have gcd, so they must work
-    print "u,v:",u,v
+    dinv = d**(-1)
+    u = R(u1*u2*dinv*dinv)
+    #print "u,d", type(u), type(u1), type(d)
+    v = R((s1*u1*v2 + s2*u2*v1 + s3*(v1*v2+f ))*dinv)%u
+    print "u:",u,"v:",v
     while (u.degree()>genus):
-        ut = (f - v*v)/u
+        ut = R((f - v*v)/u)
+        print "ut:", ut
         ut = ut/ut.lc()
+        print "ut:", ut
         vt = (-v) % ut
         h1 = (h1*(vE - v)) % uE
         h2 = (h2*ut) % uE
-        if v.degree()>g:
+        if v.degree()>genus:
             h3 = -(v.lc())*h3
         u = ut
         v = vt
@@ -132,3 +133,4 @@ def FD(m, u1, v1, u2, v2):
     return f
 
 print FD(3, a1, b1, a2, b2)
+print FD(3, a2, b2, a1, b1)
