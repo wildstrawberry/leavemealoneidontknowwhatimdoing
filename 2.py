@@ -1,21 +1,18 @@
 # HE pairing according to http://homes.esat.kuleuven.be/~fvercaut/papers/pairing2007.pdf
 
-q = 13
-# f = x**5 + 2*x**3 + (16)*x,   q = 13, seems to have torsion point of rank 3, 
-# (x^2 + x + 9, y + 5*x + 8) (x^2 + 12*x + 9, y + 12*x + 12)
+q = 31
+# f = x**5 + 13*x**4 + 2*x**3 + 4*x**2 + 11*x + 1, q = 31, n = 5, from https://arxiv.org/pdf/math/0311391.pdf
 # f = x**5 + 4*x**3 + (2401)*x, q = 31, seems to be 12x30x120, not useful
-# f = x**5 + 4*x**3 + (2401)*x, q = 13, seems to be 2x10x20, not useful
 
-TH = 10000  # threshold order
+TH = 2000  # threshold order
 
 FF = FiniteField(q)
-genus = 2
 R.<x> = PolynomialRing(FF)
-# the text book curve f = x**5 + 1184*x**3 + 1846*x**2 + 956*x + 560
-f = x**5 + 2*x**3 + (16)*x    # chosen according to the special case mentioned in https://eprint.iacr.org/2011/604.pdf
+f = x**5 + 13*x**4 + 2*x**3 + 4*x**2 + 11*x + 1
 C = HyperellipticCurve(f)
 n = C.count_points(1)
-print "number of points:", n, "factor n:", factor(n[0])
+genus = C.genus()
+print "genus:", genus, "number of points:", n, "factor n:", factor(n[0])
 
 J = C.jacobian()
 X = J(FF)
@@ -32,41 +29,63 @@ def Jacobian_order(D):
         else:
             i=i+1
 
-def Jacobian_enumeratepoints():
-    """ Enumerate the points on jacobian by enumerate the coefficients """
-    points = [] # list of all the points
+def iterrule(i,j,k,l):
+    l+=1
+    if l==q:
+        l=0
+        k+=1
+        if k==q:
+            k=0
+            j+=1
+            if j==q:
+                j=0
+                i+=1
+    return i,j,k,l
 
-    for i in range(q):
-        for j in range(q):
-            a = x**2 + i*x + j
-            for k in range(q):
-                for l in range(q):
-                    b = k*x + l  # TBD: compute b by taking square root mod a
-                    try:
-                        D = X([a,b])
-                        points.append(D)
-                    except ValueError:
-                        continue
-    print "Number of points:", len(points)
+
+def Jacobian_find_torsion():
+    """ Find group structure on jacobian by enumerating the coefficients """
+    points = [] # list of all the points enumerated
+    i, j, k, l = 0, 0, 0, 0
+    while(len(points)<100 or i==q):
+        a = x**2 + i*x + j
+        b = k*x + l  # TBD: compute b by taking square root mod a
+        i,j,k,l = iterrule(i,j,k,l)
+        try:
+            D = X([a,b])
+            points.append(D)
+            print Jacobian_order(D), a, b
+            if gcd(5,Jacobian_order(D))==5:
+                print int(Jacobian_order(D)/5)*D
+        except ValueError:
+            continue
+    #print "Number of points:", len(points)
     return points
 
-#JJJ = Jacobian_enumeratepoints()
+#print Jacobian_find_torsion()
 
-# q = 13, f = x**5 + 2*x**3 + (16)*x
-# two divisors that seem to stay in free tate module of rank 2:
-# 1 (x^2 + x + 9, y + 5*x + 8) (x^2 + 12*x + 9, y + 12*x + 12)
-# 2 (x^2 + x + 9, y + 8*x + 5) (x^2 + 12*x + 9, y + x + 1)
-# 3 (1) (1)
+D1 = X([x^2 + 23*x +15, 13*x + 28])
+D2 = X([x^2 + 4*x + 2, 29*x + 20])
+print D1, Jacobian_order(D1), D2, Jacobian_order(D2)
+print 2*D1, 3*D2
 
-a1 = x^2 + x + 9
-b1 = 8*x + 5
-a2 = x^2 + 12*x + 9
-b2 = 12*x + 12
+a1 = x^2 + 23*x +15
+b1 = 18*x + 3
+a2 = x^2 + 4*x + 2
+b2 = 2*x + 11
 
-D1 = X([a1,b1])
-D2 = X([a2,b2])
-ide = X([1,0])
-print "D1 = ", D1, "D2 = ", D2
+# (x^2 + 25*x + 9, y + 21*x + 25) (x^2 + 16*x + 23, y + 27*x + 16)
+
+a3 = x^2 + 25*x + 9
+b3 = 10*x + 6
+a4 = x^2 + 16*x + 23
+b4 = 4*x + 15
+
+
+#D1 = X([a1,b1])
+#D2 = X([a2,b2])
+#ide = X([1,0])
+#print "D1 = ", D1, "D2 = ", D2
 
 def MillerH(u1, v1, u2, v2, uE, vE):
     """ Input: D1 = [u1, v1], D2 = [u2, v2], E = [uE, vE].
@@ -86,10 +105,9 @@ def MillerH(u1, v1, u2, v2, uE, vE):
     u = R(u1*u2*dinv*dinv)
     #print "u,d", type(u), type(u1), type(d)
     v = R((s1*u1*v2 + s2*u2*v1 + s3*(v1*v2+f ))*dinv)%u
-    print "u:",u,"v:",v
+    #print "u:",u,"v:",v
     while (u.degree()>genus):
         ut = R((f - v*v)/u)
-        print "ut:", ut
         ut = ut/ut.lc()
         print "ut:", ut
         vt = (-v) % ut
@@ -132,5 +150,7 @@ def FD(m, u1, v1, u2, v2):
     f = u2.resultant(f1)/( (f3**(u2.degree()))*u2.resultant(f2) )
     return f
 
-print FD(3, a1, b1, a2, b2)
-print FD(3, a2, b2, a1, b1)
+num = FD(5, a1, b1, a2, b2)
+den = FD(5, a2, b2, a1, b1)
+
+print num/den
