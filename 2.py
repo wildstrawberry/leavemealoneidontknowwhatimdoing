@@ -6,8 +6,8 @@ TH = 2000  # threshold order
 
 FF = FiniteField(q)
 R.<x> = PolynomialRing(FF)
-f = x**5 + 0*x**4 + 0*x**3 + 0*x**2 + 0*x + 12
-C = HyperellipticCurve(f)
+hy = x**5 + 0*x**4 + 0*x**3 + 0*x**2 + 0*x + 12
+C = HyperellipticCurve(hy)
 genus = C.genus()
 
 J = C.jacobian()
@@ -63,8 +63,8 @@ print Jacobian_find_torsion()
 
 a1 = x^2 + 11*x + 16
 b1 = x + 36
-a2 = x^2 + 54*x + 16
-b2 = 17*x + 32
+a2 = x^2 + 11*x + 16
+b2 = 60*x + 25
 a3 = x^2 + 38*x + 15
 b3 = 11
 a4 = x^2 + 2*x + 11
@@ -74,7 +74,7 @@ D1 = X([a1,  b1])
 D2 = X([a2,  b2])
 D3 = X([a3,  b3])
 D4 = X([a4,  b4])
-print "D1, D2, D3, and their orders:", D1, Jacobian_order(D1), D2, Jacobian_order(D2),  D3, Jacobian_order(D3),  D4, Jacobian_order(D4)
+#print "D1, D2, D3, and their orders:", D1, Jacobian_order(D1), D2, Jacobian_order(D2),  D3, Jacobian_order(D3),  D4, Jacobian_order(D4)
 for i in range(5):
     print i, i*D1, i*D2, i*D3, i*D4
 
@@ -95,10 +95,10 @@ def MillerH(u1, v1, u2, v2, uE, vE):
     dinv = d**(-1)
     u = R(u1*u2*dinv*dinv)
     #print "u,d", type(u), type(u1), type(d)
-    v = R((s1*u1*v2 + s2*u2*v1 + s3*(v1*v2+f ))*dinv)%u
-    #print "u:",u,"v:",v
+    v = R((s1*u1*v2 + s2*u2*v1 + s3*(v1*v2+hy ))*dinv)%u
+    print "u:",u,"v:",v,"s3:",s3
     while (u.degree()>genus):
-        ut = R((f - v*v)/u)
+        ut = R((hy - v*v)/u)
         ut = ut/ut.lc()
         print "ut:", ut
         vt = (-v) % ut
@@ -130,6 +130,7 @@ def FD(m, u1, v1, u2, v2):
         f2 = (f2*f2) % u2
         f3 = f3*f3
         u, v, h1, h2, h3 = MillerH(u, v, u, v, u2, v2)
+        print "u:", u, "v:", v, "h1:", h1, "h2:", h2, "h3:", h3
         f1 = (f1*h1) % u2
         f2 = (f2*h2) % u2
         f3 = f3*h3
@@ -138,17 +139,17 @@ def FD(m, u1, v1, u2, v2):
             f1 = (f1*h1) % u2
             f2 = (f2*h2) % u2
             f3 = f3*h3
+    print "u2:", u2, "f1:", f1, "f3:", f3, "f2:", f2, u2.resultant(f2), u2.resultant(f1)  # sometimes both  u2.resultant(f2) and u2.resultant(f1) are zero ...
     f = u2.resultant(f1)/( (f3**(u2.degree()))*u2.resultant(f2) )
     return f
 
 num = FD(5, a1, b1, a4, b4)
 den = FD(5, a4, b4, a1, b1)
 
-print num, den, -num/den
+print "### num, den, e = -num/den:", num, den, -num/den
 
-
-num2 = FD(5, a2, b2, a3, b3)
+num2 = FD(5, a2, b2, a4, b4)
 print num2
 
-den2 = FD(5, a3, b3, a2, b2)
+den2 = FD(5, a4, b4, a2, b2)
 print den2, -num2/den2
