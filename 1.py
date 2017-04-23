@@ -8,8 +8,8 @@ TH = 10000  # threshold order
 q = 631
 FF = FiniteField(q)
 R.<x> = PolynomialRing(FF)
-f = x**3 + 30*x + 34
-C = HyperellipticCurve(f)
+Fx = x**3 + 30*x + 34
+C = HyperellipticCurve(Fx)
 n = C.count_points(1)
 genus = C.genus()
 print "genus:", genus, "number of points:", n, "factor n:", factor(n[0])
@@ -56,10 +56,10 @@ def MillerH(u1, v1, u2, v2, uE, vE):
     dinv = d**(-1)
     u = R(u1*u2*dinv*dinv)
     #print "u,d", type(u), type(u1), type(d)
-    v = R((s1*u1*v2 + s2*u2*v1 + s3*(v1*v2+f ))*dinv)%u
+    v = R((s1*u1*v2 + s2*u2*v1 + s3*(v1*v2+Fx ))*dinv)%u
     print "u:",u,"v:",v
     while (u.degree()>genus):
-        ut = R((f - v*v)/u)
+        ut = R((Fx - v*v)/u)
         print "ut:", ut
         ut = ut/ut.lc()
         print "ut:", ut
