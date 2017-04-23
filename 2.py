@@ -1,23 +1,20 @@
 # HE pairing according to http://homes.esat.kuleuven.be/~fvercaut/papers/pairing2007.pdf
 
-q = 31
-# f = x**5 + 13*x**4 + 2*x**3 + 4*x**2 + 11*x + 1, q = 31, n = 5, from https://arxiv.org/pdf/math/0311391.pdf
-# f = x**5 + 4*x**3 + (2401)*x, q = 31, seems to be 12x30x120, not useful
+q = 61
 
 TH = 2000  # threshold order
 
 FF = FiniteField(q)
 R.<x> = PolynomialRing(FF)
-f = x**5 + 13*x**4 + 2*x**3 + 4*x**2 + 11*x + 1
+f = x**5 + 0*x**4 + 0*x**3 + 0*x**2 + 0*x + 12
 C = HyperellipticCurve(f)
-n = C.count_points(1)
 genus = C.genus()
-print "genus:", genus, "number of points:", n, "factor n:", factor(n[0])
 
 J = C.jacobian()
 X = J(FF)
 print "X:", X   # fake set
-print "Frobenius:", C.frobenius_polynomial()
+ch = C.frobenius_polynomial()
+print "Frobenius:", ch, " #J(C) = ", ch(1), factor(ch(1))
 
 def Jacobian_order(D):
     """ input a divisor, output its order """
@@ -42,12 +39,11 @@ def iterrule(i,j,k,l):
                 i+=1
     return i,j,k,l
 
-
 def Jacobian_find_torsion():
     """ Find group structure on jacobian by enumerating the coefficients """
     points = [] # list of all the points enumerated
     i, j, k, l = 0, 0, 0, 0
-    while(len(points)<100 or i==q):
+    while(len(points)<5 or i==q):
         a = x**2 + i*x + j
         b = k*x + l  # TBD: compute b by taking square root mod a
         i,j,k,l = iterrule(i,j,k,l)
@@ -62,30 +58,25 @@ def Jacobian_find_torsion():
     #print "Number of points:", len(points)
     return points
 
-#print Jacobian_find_torsion()
-
-D1 = X([x^2 + 23*x +15, 13*x + 28])
-D2 = X([x^2 + 4*x + 2, 29*x + 20])
-print D1, Jacobian_order(D1), D2, Jacobian_order(D2)
-print 2*D1, 3*D2
-
-a1 = x^2 + 23*x +15
-b1 = 18*x + 3
-a2 = x^2 + 4*x + 2
-b2 = 2*x + 11
-
-# (x^2 + 25*x + 9, y + 21*x + 25) (x^2 + 16*x + 23, y + 27*x + 16)
-
-a3 = x^2 + 25*x + 9
-b3 = 10*x + 6
-a4 = x^2 + 16*x + 23
-b4 = 4*x + 15
+print Jacobian_find_torsion()
 
 
-#D1 = X([a1,b1])
-#D2 = X([a2,b2])
-#ide = X([1,0])
-#print "D1 = ", D1, "D2 = ", D2
+a1 = x^2 + 11*x + 16
+b1 = x + 36
+a2 = x^2 + 54*x + 16
+b2 = 17*x + 32
+a3 = x^2 + 38*x + 15
+b3 = 11
+a4 = x^2 + 2*x + 11
+b4 = 21*x + 40
+
+D1 = X([a1,  b1])
+D2 = X([a2,  b2])
+D3 = X([a3,  b3])
+D4 = X([a4,  b4])
+print "D1, D2, D3, and their orders:", D1, Jacobian_order(D1), D2, Jacobian_order(D2),  D3, Jacobian_order(D3),  D4, Jacobian_order(D4)
+for i in range(5):
+    print i, i*D1, i*D2, i*D3, i*D4
 
 def MillerH(u1, v1, u2, v2, uE, vE):
     """ Input: D1 = [u1, v1], D2 = [u2, v2], E = [uE, vE].
@@ -150,7 +141,14 @@ def FD(m, u1, v1, u2, v2):
     f = u2.resultant(f1)/( (f3**(u2.degree()))*u2.resultant(f2) )
     return f
 
-num = FD(5, a1, b1, a2, b2)
-den = FD(5, a2, b2, a1, b1)
+num = FD(5, a1, b1, a4, b4)
+den = FD(5, a4, b4, a1, b1)
 
-print num/den
+print num, den, -num/den
+
+
+num2 = FD(5, a2, b2, a3, b3)
+print num2
+
+den2 = FD(5, a3, b3, a2, b2)
+print den2, -num2/den2
