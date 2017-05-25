@@ -7,6 +7,8 @@ TH = 2000  # threshold order
 FF = FiniteField(q)
 R.<x> = PolynomialRing(FF)
 hy = x**5 + 0*x**4 + 0*x**3 + 0*x**2 + 0*x + 12
+# x^5 + x^2 + 53*x + 11, q=113
+
 C = HyperellipticCurve(hy)
 genus = C.genus()
 
