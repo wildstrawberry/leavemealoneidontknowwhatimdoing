@@ -54,7 +54,6 @@ def doubleadd(V, W20, W11, W_11, W2_1):
 
 def katepairing(m, x1, y1, x2, y2):
     mbits = bin(m)[3:]  # bin(m)=0b... string type
-    print mbits
     n = len(mbits)
 
     # the range are set to be larger to incoorperate -1 indices, W is consistant with the notation in https://eprint.iacr.org/2006/392.pdf
@@ -79,7 +78,7 @@ def katepairing(m, x1, y1, x2, y2):
             V = doubleadd(V, W[2][0], W[1][1], W[-1][1], W[2][-1])
 
     return V[0][3], V[1][1], V[1][1]/V[0][3]
-    
+
 def katepairingmanual(m, x1, y1, x2, y2):
     # compute inefficiently
     W = [[FF(0) for x in range(3)] for y in range(m+5)]
@@ -104,10 +103,10 @@ def katepairingmanual(m, x1, y1, x2, y2):
             
     for i in range(3,m+1):
         b = i%2
-        k = int((i+b)/2)
+        k = int((i-b)/2)
         print i, k, b
-        if b==0:
-            W[i][1] = (W[k+1][1]*W[k-1][1]*W[k-1][0]^2 - W[k][0]*W[k-2][0]*W[k][1]^2)/W[1][1]
+        if b==1:
+            W[i][1] = (W[k-1][1]*W[k+1][1]*W[k+1][0]^2 - W[k][0]*W[k+2][0]*W[k][1]^2)/W[-1][1]
         else:
             W[i][1] = W[k-1][1]*W[k+1][1]*W[k][0]^2 - W[k-1][0]*W[k+1][0]*W[k][1]^2
 
