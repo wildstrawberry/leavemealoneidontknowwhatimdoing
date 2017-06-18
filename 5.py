@@ -77,7 +77,7 @@ def katepairing(m, x1, y1, x2, y2):
         else:
             V = doubleadd(V, W[2][0], W[1][1], W[-1][1], W[2][-1])
 
-    return V[0][3], V[1][1], V[1][1]/V[0][3]
+    return V[0][3], V[1][1], V[1][1]/V[0][3], (V[1][1]/V[0][3])**126
 
 def katepairingmanual(m, x1, y1, x2, y2):
     # compute inefficiently
@@ -95,24 +95,24 @@ def katepairingmanual(m, x1, y1, x2, y2):
     for i in range(5,m+1):
         b = i%2
         k = int((i+b)/2)
-        print i, k, b
+#        print i, k, b
         if b==0:
             W[i][0] = W[k][0]*(W[k+2][0]*W[k-1][0]^2 - W[k-2][0]*W[k+1][0]^2)/W[2][0]
         else:
             W[i][0] = W[k+1][0]*W[k-1][0]^3 - W[k-2][0]*W[k][0]^3
-            
     for i in range(3,m+1):
         b = i%2
         k = int((i-b)/2)
-        print i, k, b
+#        print i, k, b
         if b==1:
             W[i][1] = (W[k-1][1]*W[k+1][1]*W[k+1][0]^2 - W[k][0]*W[k+2][0]*W[k][1]^2)/W[-1][1]
         else:
             W[i][1] = W[k-1][1]*W[k+1][1]*W[k][0]^2 - W[k-1][0]*W[k+1][0]*W[k][1]^2
 
-    return W, W[m][0], W[m][1], W[m][1]/W[m][0]
+    print "Manually compute W given inputs ", m, x1, y1, x2, y2
+    for i in range(m+3):
+        print i, W[i][0], W[i][1]
+    return W[m][0], W[m][1], W[m][1]/W[m][0], (W[m-1][1])**126
 
 print katepairing(6, 121, 387, 36, 60)
-print katepairingmanual(6, 121, 387, 36, 60)
 print katepairing(6, 36, 60, 121, 387)
-print katepairingmanual(6, 36, 60, 121, 387)
