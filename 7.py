@@ -4,7 +4,8 @@
 # C = HyperellipticCurve(f)
 # genus: 2 number of points: [53] factor n: 53
 # Frobenius: x^4 - 19*x^3 + 201*x^2 - 1349*x + 5041  #J(C) =  3875 5^3 * 31
-# 5-torsions: 
+# q = 61
+# 5-torsions (x^2 + 12*x, y + 13*x + 45) (x^2 + 2*x + 11, y + 40*x + 21) (x^2 + 11*x + 16, y + 11)
 
 # q = 113
 # hy = x^5 + x^2 + 53*x + 11
