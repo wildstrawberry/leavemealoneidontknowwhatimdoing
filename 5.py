@@ -112,7 +112,7 @@ def katepairingmanual(m, x1, y1, x2, y2):
     print "Manually compute W given inputs ", m, x1, y1, x2, y2
     for i in range(m+3):
         print i, W[i][0], W[i][1]
-    return W[m][0], W[m][1], W[m][1]/W[m][0], (W[m-1][1])**126
+    return W[m][0]**126, (W[m][1])**126, (W[m][1]/W[m][0])**126
 
 print katepairing(6, 121, 387, 36, 60)
 print katepairing(6, 36, 60, 121, 387)
