@@ -67,16 +67,11 @@ def W2(u, v, Pin, Qin):
         else:
             W[i][1] = Fg( (k+1)*Pin + Qin, k*Pin )*W[k+1][1]^2*W[k][0]^2
     
-    W[-1][1] = W[1][1]   # v
-
+    # compute the column of W[*][2]
+    W[-1][1] = Fg( Qin, Pin )     # v = (0,1), w = (1,0), so W[-1][1] = Fg( Qin, Pin )*W[0][1]^2*W[1][0]^2/W[1][1]
+    W[0][2] = Fg( Pin+Qin, Qin-Pin )*W[1][1]^2*W[-1][1]^2/W[2][0]   # v = (1,1), w = (-1,1)
 
     return (W[v1][v2])**16
-
-
-for ni in range(1,7):
-    for nj in range(1,7):
-        for nk in range(1,2):
-            print ni,nj,nk, Wab(7,1,ni*P, nj*Q)
 
 
 def Tri(u,v,w, Pin, Qin, Rin):
