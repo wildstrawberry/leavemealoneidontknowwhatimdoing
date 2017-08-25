@@ -47,3 +47,16 @@ def test_inverse_Gaussian_matrix(m):
         M2 = Matrix([[D() for i in range(m)] for j in range(m)])
         MM = MM + M2^(-1)
     print m, sigma, M.norm(), (M^(-1)).norm(), MM.norm()
+
+def preimage_toy(d, A, F):
+    """ d: the dimension, A and F: function and image; output M s.t. AM = F"""
+    D = []
+    for i in range(d):
+        dc = randcolumn(d)
+        z = F[0][i]
+        for j in range(1,d):
+            z = z - A[0][j]*dc[j][0]
+        dc[0] = z/A[0][0]
+        D.append(dc)
+    MinZ = block_matrix(ZZ, 1,d,[ a for a in D ])
+    return MinZ
