@@ -21,7 +21,7 @@ Q = X([x^2 + 4*x + 24, 38*x + 65])
 R = X([x^2 + 4*x + 63, 10*x + 26])
 
 for i in range(8):
-    print i, i*P, i*Q, i*R
+    print i, FF(109)**i, i*P, i*Q, i*R
 #print P[0], P[0][1], P[0][0], P[1][1], P[1][0]
 
 def Fg(Pin, Qin):
@@ -40,7 +40,8 @@ def W2(u, v, Pin, Qin):
     u11, u12, v11, v12 = Pin[0][1], Pin[0][0], Pin[1][1], Pin[1][0]
     u21, u22, v21, v22 = Qin[0][1], Qin[0][0], Qin[1][1], Qin[1][0]
 
-    # initialize the table, the dimension is set as u+v+7 because the current algorithm first compute W[*][j-1] then W[*][j]; also wanna leave space for W[-1][*]
+    # initialize the table, the dimension is set as u+v+7 because the current algorithm first compute W[*][j-1] then W[*][j]; 
+    # also wanna leave space for W[-1][*]
     W = [[FF(0) for j in range(u+v+7)] for i in range(u+v+7)]
 
     # compute the column of W[*][0]
@@ -78,9 +79,8 @@ def W2(u, v, Pin, Qin):
         W[k+delta][2] = Fg( k*Pin+2*Qin , delta*Pin )*W[k][2]^2*W[delta][0]^2/W[k-delta][2]
 
     # compute the columns of W[*][j], for j>=3;
-    # first compute W[0][j] = Fg( Pin+(j-1)*Qin, Qin-Pin )*W[1][j-1]^2*W[-1][1]^2/W[2][j-2]   # v = (1,j-1), w = (-1,1)
-    #  then compute W[1][j] = Fg( 2*Pin+(j-1)*Qin, Qin-Pin )*W[2][j-1]^2*W[-1][1]^2/W[3][j-2]   # v = (2,j-1), w = (-1,1)
-    #  then compute W[k+delta][j] = Fg( 2*Pin+(j-1)*Qin, Qin-Pin )*W[2][j-1]^2*W[-1][1]^2/W[3][j-2]   # v = (2,j-1), w = (-1,1)
+    # first compute W[0][j], W[1][j], W[2][j],
+    #  then compute W[k+delta][j] = Fg( k*Pin+j*Qin , delta*Pin )*W[k][j]^2*W[delta][0]^2/W[k-delta][j]   # v = (k,j), w = (delta,0)
 
     for j in range(3,u+v+5):
         delta = 1
@@ -102,76 +102,84 @@ def W2(u, v, Pin, Qin):
 
 #    for i in W:
 #        print i
-
     return (W[u][v])**16
 
 #W2(8,8,P,Q)
 
-for i in range(1,7):
-    for j in range(1,7):
-        print i, j, W2(7, 2, i*P, j*Q)/W2(7, 1, i*P, j*Q)/W2(0, 2, i*P, j*Q)
 
-
-def Tri(u,v,w, Pin, Qin, Rin):
+def W3(u, v, w, Pin, Qin, Rin):
+    """ W_{u,v,w}(P, Q, R),   for torison groups of size>3, u>v"""
 
     u11, u12, v11, v12 = Pin[0][1], Pin[0][0], Pin[1][1], Pin[1][0]
     u21, u22, v21, v22 = Qin[0][1], Qin[0][0], Qin[1][1], Qin[1][0]
     u31, u32, v31, v32 = Rin[0][1], Rin[0][0], Rin[1][1], Rin[1][0]
 
-    W = [[[FF(0) for x in range(3)] for y in range(3)] for z in range(m+5)]
+    # initialize the table, the number of rows is set as u+v+w+7 
+    # because the current algorithm first compute W[*][j-1][0] then W[*][j][0], then W[*][j-1][1], ...
+    # also wanna leave space for W[-1][*][0]
+    W = [[[FF(0) for x in range(w+2)] for y in range(v+w+7)] for z in range(u+v+w+7)]
+
+    # compute the column of W[*][0][0]
     W[1][0][0] = FF(1)
     W[2][0][0] = FF( (-4*u12+6*u11^2+(-4*a4)*u11+2*a3)*v12 + 2*v11^3+((-8*u11+4*a4)*u12+2*u11^3 + (-2*a4)*u11^2+(2*a3)*u11-2*a2)*v11 )
-    for i in range(3, m+2):
-        b = i%2
-        k = int((i-b)/2)  # i = 2k+b
-        #print i, k, b
-        if b==0:  # FIXME later
-            W[i][0][0] = Fg( (k+1)*Pin, (k-1)*Pin )*W[k+1][0][0]^2*W[k-1][0][0]^2/W[2][0][0]
-            #print i, Fg( (k+1)*Pin, (k-1)*Pin ), W[i][0][0]
-        else:
-            W[i][0][0] = Fg( (k+1)*Pin, (k)*Pin )*W[k+1][0][0]^2*W[k][0][0]^2
-            #print i, Fg( (k+1)*Pin, (k)*Pin ), W[i][0][0]
 
+    for i in range(3, u+v+5):
+        delta = 1
+        k = i - delta
+        while ( W[k][0][0]==0 or W[k-delta][0][0]==0 or W[delta][0][0]==0 ):
+            delta+=1
+            k = i - delta
+        W[k+delta][0][0] = Fg( k*Pin , delta*Pin )*W[k][0][0]^2*W[delta][0][0]^2/W[k-delta][0][0]
+
+    # compute the column of W[*][1][0]
     W[0][1][0] = FF(1)
     W[1][1][0] = FF(1)
-    for i in range(2, m+2):
-        b = i%2
-        k = int((i-b)/2)  # i = 2k+b
-        #print i, k, b
-        if b==0:  # FIXME later
-            W[i][1][0] = Fg( k*Pin + Qin, k*Pin )*W[k][1][0]^2*W[k][0][0]^2
-            #print i, Fg( k*Pin + Qin, k*Pin ), W[i][1][0]
-        else:
-            W[i][1][0] = Fg( (k+1)*Pin + Qin, k*Pin )*W[k+1][1][0]^2*W[k][0][0]^2
-            #print i, Fg( (k+1)*Pin + Qin, (k)*Pin ), W[i][0][0]
+    for i in range(2, u+v+5):
+        delta = 1
+        k = i - delta
+        while ( W[k][1][0]==0 or W[k-delta][1][0]==0 or W[delta][0][0]==0 ):
+            delta+=1
+            k = i - delta
+        W[k+delta][1][0] = Fg( k*Pin+Qin , delta*Pin )*W[k][1][0]^2*W[delta][0][0]^2/W[k-delta][1][0]
 
-    W[0][0][1] = FF(1)
-    W[1][0][1] = FF(1)
-    for i in range(2, m+2):
-        b = i%2
-        k = int((i-b)/2)  # i = 2k+b
-        #print i, k, b
-        if b==0:  # FIXME later
-            W[i][0][1] = Fg( k*Pin + Rin, k*Pin )*W[k][0][1]^2*W[k][0][0]^2
-            #print i, Fg( k*Pin + Rin, k*Pin ), W[i][0][1]
-        else:
-            W[i][0][1] = Fg( (k+1)*Pin + Rin, k*Pin )*W[k+1][0][1]^2*W[k][0][0]^2
-            #print i, Fg( (k+1)*Pin + Rin, (k)*Rin ), W[i][0][1]
+    W[-1][1][0] = Fg( Qin, Pin )     # v = (0,1), w = (1,0), so W[-1][1] = Fg( Qin, Pin )*W[0][1]^2*W[1][0]^2/W[1][1]
+    # compute the column of W[*][2][0]
+    W[0][2][0] = Fg(   Pin+Qin, Qin-Pin )*W[1][1][0]^2*W[-1][1][0]^2/W[2][0][0]  # v = (1,1), w = (-1,1)
+    W[1][2][0] = Fg( 2*Pin+Qin, Qin-Pin )*W[2][1][0]^2*W[-1][1][0]^2/W[3][0][0]  # v = (2,1), w = (-1,1)
+    for i in range(2, u+v+5):
+        delta = 1
+        k = i - delta
+        while ( W[k][2][0]==0 or W[k-delta][2][0]==0 or W[delta][0][0]==0 ):
+            delta+=1
+            k = i - delta
+        W[k+delta][2][0] = Fg( k*Pin+2*Qin , delta*Pin )*W[k][2][0]^2*W[delta][0][0]^2/W[k-delta][2][0]
 
-    W[0][1][1] = FF(1)
-    W[1][1][1] = FF(1)  #this is not correct
-    for i in range(2, m+2):
-        b = i%2
-        k = int((i-b)/2)  # i = 2k+b
-        #print i, k, b
-        if b==0:  # FIXME later
-            W[i][1][1] = Fg( k*Pin + Qin + Rin, k*Pin )*W[k][1][1]^2*W[k][0][0]^2
-            #print i, Fg( k*Pin + Qin + Rin, k*Pin ), W[i][1][1]
-        else:
-            W[i][1][1] = Fg( (k+1)*Pin + Qin + Rin, k*Pin )*W[k+1][1][1]^2*W[k][0][0]^2
-            #print i, Fg( (k+1)*Pin + Qin + Rin, (k)*Rin ), W[i][1][1]
+    # compute the columns of W[*][j][0], for j>=3;
+    # first compute W[0][j][0], W[1][j][0], W[2][j][0],
+    #  then compute W[k+delta][j][0] = Fg( k*Pin+j*Qin , delta*Pin )*W[k][j]^2*W[delta][0]^2/W[k-delta][j]   # v = (k,j), w = (delta,0)
 
-    #print "Manually compute W given m=", m, ", P = ", Pin, ", Q = ", Qin, ", R = ", Rin
-    for i in range(8):
-        print i, W[i][0][0], W[i][1][0], W[i][0][1], W[i][1][1]
-    return (W[7][1][0])**16
+    for j in range(3,v+w+5):
+        delta = 1
+        k = j - delta
+        while ( W[0][k][0]==0 or W[0][k-delta][0]==0 or W[0][delta][0]==0 ):
+            delta+=1
+            k = j - delta
+        W[0][k+delta][0] = Fg( k*Qin , delta*Qin )*W[0][k][0]^2*W[0][delta][0]^2/W[0][k-delta][0]   # v = [0][k], w = [0][delta]
+        W[1][j][0] = Fg( 2*Pin+(j-1)*Qin, Qin-Pin )*W[2][j-1][0]^2*W[-1][1][0]^2/W[3][j-2][0]   # v = (2,j-1), w = (-1,1)
+        W[2][j][0] = Fg( 3*Pin+(j-1)*Qin, Qin-Pin )*W[3][j-1][0]^2*W[-1][1][0]^2/W[4][j-2][0]   # v = (3,j-1), w = (-1,1)
+
+        for i in range(3,u+v+5):
+            delta = 1
+            k = i - delta
+            while ( W[k][j][0]==0 or W[k-delta][j][0]==0 or W[delta][0][0]==0 ):
+                delta+=1
+                k = i - delta
+            W[k+delta][j][0] = Fg( k*Pin+j*Qin , delta*Pin )*W[k][j][0]^2*W[delta][0][0]^2/W[k-delta][j][0]
+
+    for i in W:
+        print i
+    return (W[u][v][0])**16
+
+for i in range(1,0):
+    for j in range(1,7):
+        print i, j, W3(1, 7, 0, i*P, j*Q, R)
