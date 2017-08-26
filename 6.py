@@ -41,19 +41,18 @@ def W2(u, v, Pin, Qin):
     u21, u22, v21, v22 = Qin[0][1], Qin[0][0], Qin[1][1], Qin[1][0]
 
     # initialize the table, +5 because I also want to leave the space for things like W[-1][*] 
-    W = [[FF(0) for j in range(v+5)] for i in range(u+5)]   
+    W = [[FF(0) for j in range(v+5)] for i in range(u+5)]
 
     # compute the column of W[*][0]
     W[1][0] = FF(1)
     W[2][0] = FF( (-4*u12+6*u11^2+(-4*a4)*u11+2*a3)*v12 + 2*v11^3+((-8*u11+4*a4)*u12+2*u11^3 + (-2*a4)*u11^2+(2*a3)*u11-2*a2)*v11 )
     for i in range(3, u+2):
-        b = i%2
-        k = int((i-b)/2)  # i = 2k+b
-        #print i, k, b
-        if b==0:  # FIXME later, the problem is W[m][0] = 0, so that values derived from W[m][0] would suffer
-            W[i][0] = Fg( (k+1)*Pin, (k-1)*Pin )*W[k+1][0]^2*W[k-1][0]^2/W[2][0]
-        else:
-            W[i][0] = Fg( (k+1)*Pin, (k)*Pin )*W[k+1][0]^2*W[k][0]^2
+        delta = 1
+        k = i - delta
+        while ( W[k][0]==0 or W[k-delta][0]==0 ):
+            delta++
+            k = i-delta
+        W[k+delta][0] = Fg( k*Pin , delta*Pin )*W[k][0]^2*W[delta][0]^2/W[k-delta][0]
 
     # compute the column of W[*][1]
     W[0][1] = FF(1)
