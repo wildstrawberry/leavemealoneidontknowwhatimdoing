@@ -106,7 +106,6 @@ def W2(u, v, Pin, Qin):
 
 #W2(8,8,P,Q)
 
-
 def W3(u, v, w, Pin, Qin, Rin):
     """ W_{u,v,w}(P, Q, R),   for torison groups of size>3, u>v"""
 
@@ -176,10 +175,59 @@ def W3(u, v, w, Pin, Qin, Rin):
                 k = i - delta
             W[k+delta][j][0] = Fg( k*Pin+j*Qin , delta*Pin )*W[k][j][0]^2*W[delta][0][0]^2/W[k-delta][j][0]
 
-    for i in W:
-        print i
-    return (W[u][v][0])**16
+    # ++++++++++++++++++++++++++++++++++++++++++
+    # ++++++++++++++++++++++++++++++++++++++++++
+    # compute the column of W[*][0][1]
+    W[0][0][1] = FF(1)
+    W[1][0][1] = FF(1)
+    for i in range(2, u+v+5):
+        delta = 1
+        k = i - delta
+        while ( W[k][0][1]==0 or W[k-delta][0][1]==0 or W[delta][0][0]==0 ):
+            delta+=1
+            k = i - delta
+        W[k+delta][0][1] = Fg( k*Pin+Rin , delta*Pin )*W[k][0][1]^2*W[delta][0][0]^2/W[k-delta][0][1]
 
-for i in range(1,0):
-    for j in range(1,7):
-        print i, j, W3(1, 7, 0, i*P, j*Q, R)
+    # compute the column of W[*][1][1]
+    W[0][1][1] = FF(1)
+    W[1][1][1] = FF(4) # !!! not clear how to derive, should depend on $R$, put a random number here, maybe it will get cancelled out
+    for i in range(2, u+v+5):
+        delta = 1
+        k = i - delta
+        while ( W[k][1][1]==0 or W[k-delta][1][1]==0 or W[delta][0][0]==0 ):
+            delta+=1
+            k = i - delta
+        W[k+delta][1][1] = Fg( k*Pin + Qin + Rin , delta*Pin )*W[k][1][1]^2*W[delta][0][0]^2/W[k-delta][1][1]
+
+    # compute the columns of W[*][j][0], for j>=2;
+    # first compute W[0][j][0], W[1][j][0], W[2][j][0],
+    #  then compute W[k+delta][j][0] = Fg( k*Pin+j*Qin , delta*Pin )*W[k][j]^2*W[delta][0]^2/W[k-delta][j]   # v = (k,j), w = (delta,0)
+
+    for j in range(2,v+w+5):
+        delta = 1
+        k = j - delta
+        while ( W[0][k][1]==0 or W[0][k-delta][1]==0 or W[0][delta][0]==0 ):
+            delta+=1
+            k = j - delta
+        W[0][k+delta][1] = Fg(k*Qin + Rin,delta*Qin)*W[0][k][1]^2*W[0][delta][0]^2/W[0][k-delta][1]  # v = [0][k][1], w = [0][delta][0]
+        W[1][j][1] = Fg( 2*Pin+(j-1)*Qin+Rin, Qin-Pin )*W[2][j-1][1]^2*W[-1][1][0]^2/W[3][j-2][1]   # v = (2,j-1,1), w = (-1,1,0)
+        W[2][j][1] = Fg( 3*Pin+(j-1)*Qin+Rin, Qin-Pin )*W[3][j-1][1]^2*W[-1][1][0]^2/W[4][j-2][1]   # v = (3,j-1,1), w = (-1,1,0)
+
+        for i in range(3,u+v+5):
+            delta = 1
+            k = i - delta
+            while ( W[k][j][1]==0 or W[k-delta][j][1]==0 or W[delta][0][0]==0 ):
+                delta+=1
+                k = i - delta
+            W[k+delta][j][1] = Fg( k*Pin+j*Qin+Rin , delta*Pin )*W[k][j][1]^2*W[delta][0][0]^2/W[k-delta][j][1]
+
+#    for i in W:
+#        print i
+    return (W[u][v][w])**16
+
+W3(1,1,1,P,Q,R)#/W3(8,0,0,P,Q,R)
+
+for i in range(1,3):
+    for j in range(1,4):
+        for k in range(1,4):
+            print i, j, k, W3(15, 8, 1, i*P, j*Q, k*R)*W3(15, 0, 0, i*P, j*Q, k*R)*W3(0, 8, 0, i*P, j*Q, k*R)/( W3(15, 8, 0, i*P, j*Q, k*R)*W3(15, 0, 1, i*P, j*Q, k*R)*W3(0, 8, 1, i*P, j*Q, k*R)*W3(1, 1, 1, i*P, j*Q, k*R))
