@@ -1,28 +1,25 @@
 # from http://doc.sagemath.org/html/en/reference/curves/sage/schemes/elliptic_curves/ell_curve_isogeny.html
+from sage.schemes.elliptic_curves.ell_curve_isogeny import compute_isogeny_starks, compute_sequence_of_maps
 
 E = EllipticCurve(GF(37), [0,0,0,1,8])
 print "j-inv of E: ", E.j_invariant()
-print "all the points on E: ",E.points()
+listpoints =  E.points()
+#for pos in listpoints:
+#    print pos, pos.order()
 print "Number of points on E: ",E.count_points(1)
 R.<x> = GF(37)[]
 
-f = x^3 + x^2 + 28*x + 33  # kernel polynomial
-f.roots()
-phi = EllipticCurveIsogeny(E, f)  # generate an isogeny from kernel polynomial
-phi_hat = phi.dual()
-print phi #, phi.rational_maps()
-print phi_hat #, phi_hat.rational_maps()
-(X, Y) = phi.rational_maps()
-(Xhat, Yhat) = phi_hat.rational_maps()
-
-P = E(25,9)
-print "P and its order: ", P, P.order(), 2*P, 3*P
-
-phi2 = EllipticCurveIsogeny(E, P)
-
-phi3 = E.multiplication_by_m(3)
-print phi3
-#phi5 = E.multiplication_by_m(5)
+for A in range(7,15):
+    for B in range(3,15):
+        try:
+            E2 = EllipticCurve(GF(37), [0,0,0,A,B])
+            print E2, "j-inv:", E2.j_invariant()
+            for degree in range(4,8):
+                fd = compute_isogeny_starks(E, E2, degree)
+                print degree, fd, fd.roots()
+        except (ArithmeticError)and(ValueError):
+            print "Oops, a signular curve, or no isogeny of prescribed degree"
+            continue
 
 
 E2 = EllipticCurve(GF(1009), [0,0,0,1,3])
