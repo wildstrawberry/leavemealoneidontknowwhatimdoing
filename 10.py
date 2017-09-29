@@ -4,8 +4,8 @@ from sage.schemes.elliptic_curves.ell_curve_isogeny import compute_isogeny_stark
 E = EllipticCurve(GF(37), [0,0,0,1,8])
 print "j-inv of E: ", E.j_invariant()
 listpoints =  E.points()
-for pos in listpoints:
-    print pos, pos.order()
+#for pos in listpoints:
+#    print pos, pos.order()
 print "Number of points on E: ",E.count_points(1)
 R.<x> = GF(37)[]
 f = x^3 + x^2 + 28*x + 33
@@ -17,18 +17,21 @@ print phi, phi.rational_maps()
 P = E(3,36)
 print P, P.order(), 7*P
 
-for A in range(5,5):
+for A in range(1,15):
     for B in range(7,15):
         try:
             E2 = EllipticCurve(GF(37), [0,0,0,A,B])
             for degree in range(4,8):
-#                fd = compute_sequence_of_maps(E, E2, degree)
-                fd = compute_isogeny_starks(E, E2, degree)
+                try:
+                    #fd = compute_sequence_of_maps(E, E2, degree)
+                    fd = compute_isogeny_starks(E, E2, degree)
 #                phifd = EllipticCurveIsogeny(E, fd), need fd sqrt, but....
-                print degree, fd, fd.roots()
+                    print degree, fd, fd.roots()
+                except (ValueError):
+                    print "Oops, no isogenies with degree", degree
             print "end of isogenies that maps to ", E2, "j-inv:", E2.j_invariant()
-        except (ArithmeticError)and(ValueError):
-#            print "Oops, a signular curve, or no isogeny of prescribed degree"
+        except (ArithmeticError):
+#            print "Oops, a signular curve"
             continue
 
 E2 = EllipticCurve(GF(1009), [0,0,0,1,3])
