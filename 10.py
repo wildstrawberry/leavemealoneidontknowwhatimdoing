@@ -8,15 +8,16 @@ for pos in listpoints:
     print pos, pos.order()
 print "Number of points on E: ",E.count_points(1)
 R.<x> = GF(37)[]
-#f = x^3 + x^2 + 28*x + 33
-#phi = EllipticCurveIsogeny(E, f)  # generate an isogeny from kernel polynomial
-#phi_hat = phi.dual()
-#print phi, phi.rational_maps()
+f = x^3 + x^2 + 28*x + 33
+f.roots()
+phi = EllipticCurveIsogeny(E, f)  # generate an isogeny from kernel polynomial
+phi_hat = phi.dual()
+print phi, phi.rational_maps()
 
 P = E(3,36)
 print P, P.order(), 7*P
 
-for A in range(5,15):
+for A in range(5,5):
     for B in range(7,15):
         try:
             E2 = EllipticCurve(GF(37), [0,0,0,A,B])
