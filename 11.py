@@ -28,6 +28,12 @@ def rand_full_rank_MatR(k,l):
         M = Matrix(R,[[R.random_element() for i in range(l)] for j in range(k)])
     return M
 
+def rand_rank_one_MatR(k,l):
+    """ generate a random kxl matrix of rank 1 """
+    M1 = Matrix(R,[[R.random_element() for i in range(1)] for j in range(k)])
+    M2 = Matrix(R,[[R.random_element() for i in range(l)] for j in range(1)])
+    return M1*M2
+
 def pad_diagonal_rand(M):
     """ turn M into diag(RM1, RM2, M), where RM1, RM2 are random matrices of dimension r"""
     RM1 = rand_full_rank_MatR(r,r)
@@ -102,7 +108,7 @@ def test(rep, mode):
 
     S = [ [ alphaGen()*J*pad_diagonal_rand(Iw)*Ki[0][0] ] + [ alphaGen()*Ki[k-1][1]*pad_diagonal_rand(Iw)*Ki[k][0] for k in range(1,kappa) ] for j in range(Wdimmax) ]
     # the last S[\star][kappa-1] will never be used so we don't worry its incorrectness
-    E = [ [ rand_full_rank_MatR(Jrow,m) ] + [ rand_full_rank_MatR(w+2*r,m) for k in range(1,kappa-1) ] + [ rand_full_rank_MatR(w+2*r,1) ] for j in range(Wdimmax) ]
+    E = [ [ rand_rank_one_MatR(Jrow,m) ] + [ rand_rank_one_MatR(w+2*r,m) for k in range(1,kappa-1) ] + [ rand_rank_one_MatR(w+2*r,1) ] for j in range(Wdimmax) ]
     D = [ [ rand_full_rank_MatR(m,m) for k in range(kappa-1) ] + [ rand_full_rank_MatR(m,1) ] for j in range(Wdimmax) ]
     # the last S[\star][kappa-1] will never be used so we don't worry its incorrectness
 
