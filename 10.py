@@ -24,7 +24,7 @@ for A in range(0,36):
             for degree in range(4,8):
                 try:
                     #fd = compute_sequence_of_maps(E, E2, degree)
-                    fd = compute_isogeny_starks(E, E2, degree)
+                    fd = compute_isogeny_starks(E, E2, degree)  #stark's algorithm doesn't seem to respect group structures.
                     #phi = EllipticCurveIsogeny(E, fd)
                     print degree, A, B, E2.j_invariant(), fd.factor()
                 except (ValueError):
