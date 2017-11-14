@@ -1,6 +1,8 @@
-# from http://doc.sagemath.org/html/en/reference/curves/sage/schemes/elliptic_curves/ell_curve_isogeny.html
+# References:
+# http://doc.sagemath.org/html/en/reference/curves/sage/schemes/elliptic_curves/ell_curve_isogeny.html
 # http://www.math.uwaterloo.ca/~mrubinst/modularpolynomials/phi_l.html
 # https://math.mit.edu/~drew/ClassicalModPolys.html
+from sage.schemes.elliptic_curves.ell_curve_isogeny import compute_isogeny_starks, compute_sequence_of_maps
 
 FS = 37
 
@@ -17,7 +19,7 @@ def modular3(X, Y):
 
 def modular5(X, Y):
     """ X_0(5) from BLS  """
-    return 141359947154721358697753474691071362751004672000 + 53274330803424425450420160273356509151232000*(X+Y) - 264073457076620596259715790247978782949376*X*Y + 6692500042627997708487149415015068467200*(X^2+Y^2) +  36554736583949629295706472332656640000*(X^2*Y+X*Y^2) + 5110941777552418083110765199360000*(X^2*Y^2) +  280244777828439527804321565297868800*(X^3 + Y^3) -192457934618928299655108231168000*(X^3*Y+X*Y^3) + 26898488858380731577417728000*(X^3*Y^2+X^2*Y^3) -441206965512914835246100*X^3*Y^3 + 1284733132841424456253440*(X^4 + Y^4) + 128541798906828816384000*(X^4*Y+X*Y^4) + 383083609779811215375*(X^4*Y^2+X^2*Y^4)+ 107878928185336800*(X^4*Y^3+X^3*Y^4) + 1665999364600*X^4*Y^4 + 1963211489280*(X^5 + Y^5) - 246683410950*(X^5*Y+X*Y^5) + 2028551200*(X^5*Y^2+X^2*Y^5) -4550940*(X^5*Y^3+X^3*Y^5) + 3720*(X^5*Y^4+X^4*Y^5) - X^5*Y^5 + (X^6+Y^6)
+    return 141359947154721358697753474691071362751004672000 + 53274330803424425450420160273356509151232000*(X+Y) - 264073457076620596259715790247978782949376*X*Y + 6692500042627997708487149415015068467200*(X^2+Y^2) +  36554736583949629295706472332656640000*(X^2*Y+X*Y^2) + 5110941777552418083110765199360000*(X^2*Y^2) +  280244777828439527804321565297868800*(X^3 + Y^3) -192457934618928299655108231168000*(X^3*Y+X*Y^3) + 26898488858380731577417728000*(X^3*Y^2+X^2*Y^3) - 441206965512914835246100*X^3*Y^3 + 1284733132841424456253440*(X^4 + Y^4) + 128541798906828816384000*(X^4*Y+X*Y^4) + 383083609779811215375*(X^4*Y^2+X^2*Y^4)+ 107878928185336800*(X^4*Y^3+X^3*Y^4) + 1665999364600*X^4*Y^4 + 1963211489280*(X^5 + Y^5) - 246683410950*(X^5*Y+X*Y^5) + 2028551200*(X^5*Y^2+X^2*Y^5) -4550940*(X^5*Y^3+X^3*Y^5) + 3720*(X^5*Y^4+X^4*Y^5) - X^5*Y^5 + (X^6+Y^6)
 
 def check_connectivity():
     """ enumerate all the j variants, to see if they are connected """
@@ -30,4 +32,37 @@ def check_connectivity():
             if rc5==0:
                 print j1, j2, "5"
 
-check_connectivity()
+#check_connectivity()
+
+def finddots():
+    """ find curves with specific j-inv's  """
+    listcurve1 = []
+    listcurve2 = []
+    for A in xrange(0,FS):
+        for B in xrange(0,FS):
+            try:
+                E1 = EllipticCurve(RRR, [0,0,0,A,B])
+                if E1.j_invariant()==9 or E1.j_invariant()==18 or E1.j_invariant()==21 or E1.j_invariant()==34:
+                    if E1.count_points(1)==36:
+                        listcurve1.append(E1)
+                    elif E1.count_points(1)==40:
+                        listcurve2.append(E1)
+                    print "E1:", E1, "j(E1):", E1.j_invariant(), "#(E1)=", E1.count_points(1)
+            except (ArithmeticError):
+                continue
+    return listcurve1, listcurve2
+
+candidate36, candidate40 = finddots()
+print len(candidate40)
+
+for E1 in candidate40:
+    for E2 in candidate40:
+        if E1.j_invariant()!=E2.j_invariant():
+            try:
+                fd = compute_sequence_of_maps(E1, E2, 3)
+                #phi = EllipticCurveIsogeny(E, fd)
+                print 5, E1.j_invariant(), E2.j_invariant()
+            except (ValueError):
+                #print "Oops, no isogenies with degree", degree
+                continue
+        #print "E1:", E1, "j(E1):", E1.j_invariant(), "#(E1)=", E1.count_points(1)
