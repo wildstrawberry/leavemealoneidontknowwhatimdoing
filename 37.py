@@ -55,8 +55,24 @@ def finddots():
 candidate36, candidate40 = finddots()
 ll = len(candidate40)
 
-for i in xrange(0,ll):
-    for j in xrange(0,10):
+# index 0 -> 42 -> 50 -> 45 -> 52 -> 4 -> 64
+# j-inv 18->  9 -> 34 -> 21 -> 18 -> 9 -> 34
+
+E1 = candidate40[11]
+E2 = candidate40[56]
+
+(isom1, isom2, E1pr, E2pr, ker_poly) = compute_sequence_of_maps(E1, E2, 5)
+phi12 = EllipticCurveIsogeny(E1pr, ker_poly)
+for P in E1.points():
+    print P, P.order(), phi12(P), phi12(P).order()
+#(isom1, isom2, E1pr, E2pr, ker_poly) = compute_sequence_of_maps(E1, E2, 5)
+#print compute_sequence_of_maps(E2, E3, 5)
+#print compute_sequence_of_maps(E3, E4, 5)
+#print compute_sequence_of_maps(E4, E5, 5)
+
+
+for i in xrange(0,0):
+    for j in xrange(0,ll):
         E1 = candidate40[i]
         E2 = candidate40[j]
         if E1.j_invariant()!=E2.j_invariant():
@@ -65,7 +81,8 @@ for i in xrange(0,ll):
                 #phi = EllipticCurveIsogeny(E, fd)
                 if ker_poly.degree() ==2 and len(ker_poly.roots())==2:
                     phi = EllipticCurveIsogeny(E1pr, ker_poly)
-                    print 5, i,j," : " ,E1.j_invariant(), E2.j_invariant(), ker_poly.degree(), ker_poly.roots(), phi
+                    print 5, i,j," : " ,E1.j_invariant(), E2.j_invariant(), ker_poly, ker_poly.roots()
+                    print phi
             except (ValueError):
                 #print "Oops, no isogenies with degree", degree
                 continue
