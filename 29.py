@@ -60,16 +60,33 @@ candidate36, candidate24 = finddots()
 ll = len(candidate24)
 print ll
 
-E1 = candidate24[0]
-E2 = candidate24[3]
+E1 = candidate24[1]
+E2 = candidate24[4]
+E3 = candidate24[52]
+E4 = candidate24[31]
+E5 = candidate24[42]
 
 (isom1, isom2, E1pr, E2pr, ker_poly) = compute_sequence_of_maps(E1, E2, 3)
 phi12 = EllipticCurveIsogeny(E1pr, ker_poly)
-print phi12
-for P in E1.points():
-    print P, P.order(), phi12(P), phi12(P).order()
+print phi12, ker_poly
+(isom1, isom2, E1pr, E2pr, ker_poly) = compute_sequence_of_maps(E2, E3, 3)
+phi23 = EllipticCurveIsogeny(E1pr, ker_poly)
+print phi23, ker_poly
+(isom1, isom2, E1pr, E2pr, ker_poly) = compute_sequence_of_maps(E3, E4, 3)
+phi34 = EllipticCurveIsogeny(E1pr, ker_poly)
+print phi34, ker_poly
+(isom1, isom2, E1pr, E2pr, ker_poly) = compute_sequence_of_maps(E4, E5, 3)
+phi45 = EllipticCurveIsogeny(E1pr, ker_poly)
+print phi45, ker_poly
 
-for i in xrange(0,0):
+for P in E1.points():
+    Q = phi12(P)
+    R = phi23(Q)
+    S = phi34(R)
+    T = phi45(S)
+    print P, P.order(), Q, Q.order(), R, R.order(), S, S.order(), T, T.order()
+
+for i in xrange(31,32):
     for j in xrange(0,ll):
         E1 = candidate24[i]
         E2 = candidate24[j]
