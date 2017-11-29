@@ -46,7 +46,7 @@ def finddots():
             try:
                 E1 = EllipticCurve(RRR, [0,0,0,A,B])
                 #print E1.j_invariant()
-                if E1.count_points(1)==93:
+                if E1.count_points(1)==93: # or 75
                     if E1.j_invariant() not in possiblejv:
                         possiblejv.append(E1.j_invariant())
                     #print "E1:", E1, "j(E1):", E1.j_invariant(), "#(E1)=", E1.count_points(1)
