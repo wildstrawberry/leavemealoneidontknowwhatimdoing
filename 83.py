@@ -39,7 +39,6 @@ def check_connectivity():
 #check_connectivity()
 
 def finddots():
-    """ find curves with specific j-inv's  """
     possiblejv = []
     for A in xrange(0,q):
         for B in xrange(0,q):
