@@ -15,8 +15,12 @@ def printgroupmorphism(EE):
     for PP in listpoints:
         print PP, PP.order(), phi(PP), phi(PP).order()
 
+def modular2(X, Y):
+    """ from Kohel's thesis """
+    return (X + Y)^3 - X^2*Y^2 + 1485*X*Y*(X + Y) - 162000*(X + Y)^2 + 41097375*X*Y + 8748000000*(X + Y) - 157464000000000
+
 def modular3(X, Y):
-    """ from Kohel's thesis, Psi function  """
+    """ from Kohel's thesis  """
     return (X+Y)^4 - X^3*Y^3 + 2232*X^2*Y^2*(X+Y)+36864000*(X+Y)^3 - 1069960*X*Y*(X + Y)^2 + 2590058000*X^2*Y^2 + 8900112384000*X*Y*( X + Y ) + 452984832000000*(X + Y)^2 - 771751936000000000*X*Y + 1855425871872000000000*(X + Y)
 
 def modular5(X, Y):
