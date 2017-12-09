@@ -41,10 +41,19 @@ PHI5 = [[0, 0, 141359947154721358697753474691071362751004672000L], [1, 0, 532743
 PHI = [ [], [], PHI2, PHI3, PHI4, PHI5  ]
 
 def Phieval(N, i, j, m):
+    """ eval PHI_N(i,j) mod m  """
     v = 0
     for monomial in PHI[N]:
         v = ( v + (i**monomial[0]) * (j**monomial[1]) * (monomial[2]%m)  )%m
     return v
 
-print Phieval(3, 23, 14, 83)
+def onesidephi(N, i, m):
+    """ input, N, i, m, output the coefficients of the polynomial f(y) = PHI_N(i,y)  """
+    v = []
+    for monomial in PHI[N]:
+        v.append( [ ( (i**monomial[0]) * (monomial[2]%m)  )%m, monomial[1] ] )
+    return v
+
+print Phieval(3, 23, 29, 83)
+print onesidephi(3, 23, 83)
 #parsephi()
