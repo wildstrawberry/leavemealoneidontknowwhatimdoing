@@ -24,8 +24,12 @@ def main():
 	for i in xrange(0,NUM_ROW):
 		it = infile.readline()
 		print i, it
-		coeff.append( [ it.replace("[","").replace("]",",") ] )
-	print coeff		
+		s = it.replace("[","").replace("\n","").replace("]",",").split(',')
+		v = []
+		for e in s:
+			v.append(int(e))
+		coeff.append( v )
+	print len(coeff), coeff
 			
 	infile.close()
 	
