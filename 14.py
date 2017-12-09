@@ -24,9 +24,7 @@ def main():
 	for i in xrange(0,NUM_ROW):
 		it = infile.readline()
 		print i, it
-			#for d in xrange(0,DIM):
-			#	vec.append( int(infile.readline().replace("[","").replace("]\n","")) )
-			#infile.readline()
+		coeff.append( [ it.replace("[","").replace("]",",") ] )
 	print coeff		
 			
 	infile.close()
