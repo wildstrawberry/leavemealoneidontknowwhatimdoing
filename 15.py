@@ -6,9 +6,10 @@ PHI4 = [[0, 0, 280949374722195372109640625000000000000L], [1, 0, -36493632779675
 PHI5 = [[0, 0, 141359947154721358697753474691071362751004672000L], [1, 0, 53274330803424425450420160273356509151232000L], [0, 1, 53274330803424425450420160273356509151232000L], [1, 1, -264073457076620596259715790247978782949376L], [2, 0, 6692500042627997708487149415015068467200L], [0, 2, 6692500042627997708487149415015068467200L], [2, 1, 36554736583949629295706472332656640000L], [1, 2, 36554736583949629295706472332656640000L], [2, 2, 5110941777552418083110765199360000L], [3, 0, 280244777828439527804321565297868800L], [0, 3, 280244777828439527804321565297868800L], [3, 1, -192457934618928299655108231168000L], [1, 3, -192457934618928299655108231168000L], [3, 2, 26898488858380731577417728000L], [2, 3, 26898488858380731577417728000L], [3, 3, -441206965512914835246100L], [4, 0, 1284733132841424456253440L], [0, 4, 1284733132841424456253440L], [4, 1, 128541798906828816384000L], [1, 4, 128541798906828816384000L], [4, 2, 383083609779811215375L], [2, 4, 383083609779811215375L], [4, 3, 107878928185336800], [3, 4, 107878928185336800], [4, 4, 1665999364600], [5, 0, 1963211489280], [0, 5, 1963211489280], [5, 1, -246683410950], [1, 5, -246683410950], [5, 2, 2028551200], [2, 5, 2028551200], [5, 3, -4550940], [3, 5, -4550940], [5, 4, 3720], [4, 5, 3720], [5, 5, -1], [6, 0, 1], [0, 6, 1]]
 PHI = [ [], [], PHI2, PHI3, PHI4, PHI5  ]
 
-q = 83
+q = next_prime(830000)
 FF = FiniteField(q)
 RR.<x> = PolynomialRing(FF)
+print q
 
 def Phieval(N, i, j, m):
     """ eval PHI_N(i,j) mod m  """
@@ -17,12 +18,40 @@ def Phieval(N, i, j, m):
         v = ( v + (i**monomial[0]) * (j**monomial[1]) * (monomial[2]%m)  )%m
     return v
 
-def onesidephi(N, i, m):
-    """ input, N, i, m, output the polynomial f(y) = PHI_N(i,y)  """
+def onesidephi(N, i):
+    """ input, N, i, output the polynomial f(y) = PHI_N(i,y)  """
     f = 0
     for monomial in PHI[N]:
         f = f + (i**monomial[0])*monomial[2]* x^monomial[1]
     return f.roots()
 
-g = onesidephi(3, 23, q)
-print g
+def buildedge():
+    ls = []
+    for i in range(q):
+        g = onesidephi(3, i)
+        ls.append( [ i,g ] )
+        #if len(g)>0:
+        #    print i,g
+    return ls
+
+LIST_JV = buildedge()
+
+def moveahead(path, edge):
+    """ input: the existing path [a, b, c, d], edge = [d, nextsteps], output   """
+    for e in edge[1]:
+        v = e[0]
+        if v not in path:
+            path.append(v)
+            moveahead( path, LIST_JV[ path[-1] ] )
+        elif len(path)>1 and v==path[-2]:
+            continue
+        else:
+            print len(path), path, edge, v
+
+def probe():
+    for source in LIST_JV[1:10]:
+        if len(source[1])>0:
+            path = [ source[0] ]
+            moveahead( path, LIST_JV[ path[-1] ] )
+
+probe()
