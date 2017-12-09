@@ -29,6 +29,9 @@ def main():
 		for e in s:
 			v.append(int(e))
 		coeff.append( v )
+		if v[0] != v[1]:
+			w = [ v[1], v[0], v[2] ]
+			coeff.append( w )
 	print len(coeff), coeff
 			
 	infile.close()
