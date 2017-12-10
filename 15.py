@@ -1,4 +1,4 @@
-# depth probing
+# volcano probing
 
 PHI2 = [[3, 0, 1], [0, 3, 1], [2, 0, -162000], [0, 2, -162000], [2, 1, 1488], [1, 2, 1488], [2, 2, -1], [1, 0, 8748000000], [0, 1, 8748000000], [1, 1, 40773375], [0, 0, -157464000000000]]
 PHI3 = [[1, 0, 1855425871872000000000L], [0, 1, 1855425871872000000000L], [1, 1, -770845966336000000], [2, 0, 452984832000000], [0, 2, 452984832000000], [2, 1, 8900222976000], [1, 2, 8900222976000], [2, 2, 2587918086], [3, 0, 36864000], [0, 3, 36864000], [3, 1, -1069956], [1, 3, -1069956], [3, 2, 2232], [2, 3, 2232], [3, 3, -1], [4, 0, 1], [0, 4, 1]]
@@ -7,7 +7,7 @@ PHI5 = [[0, 0, 141359947154721358697753474691071362751004672000L], [1, 0, 532743
 
 PHI = [ [], [], PHI2, PHI3, PHI4, PHI5  ]
 
-q = next_prime(83)
+q = 83 #next_prime(83)
 FF = FiniteField(q)
 RR.<x> = PolynomialRing(FF)
 print q
@@ -28,37 +28,43 @@ def onesidephi(N, i):
 
 def buildedge():
     ls = []
-    ls2 = []
-    fc1 = 2
-    fc2 = 4
+    fc1 = 3
     for i in range(q):
         g = onesidephi(fc1, i)
-        h = onesidephi(fc2, i)
         if len(g)>0:
             print i,fc1,g
-        if len(h)>0:
-            print i,fc2,h
         ls.append( [ i,g ] )
-        ls2.append( [ i,h ] )
     return ls
 
 LIST_JV = buildedge()
 
-def moveahead(path, edge):
-    """ input: the existing path [a, b, c, d], edge = [d, nextsteps], output   """
-    for e in edge[1]:
+def moveahead(path):
+    """ input: the existing path e.g. [a, b, c];  output [a, b, c, d]   """
+    edges = LIST_JV[ path[-1] ]  # all the edges from the last vertex
+    for e in edges[1]:
         v = e[0]
         if v not in path:
-            path.append(v)
-            moveahead( path, LIST_JV[ path[-1] ] )
-        elif len(path)>1 and v==path[-2]:
+            longerpath = path + [v]
+            #print longerpath
+            return moveahead( longerpath )
+        elif (v in path) and len(path)>1 and v!=path[-2]:
+            #print path
+            return path + [v]
+        elif len(path)>1 and v==path[-2] and e[1]==1: # excluding walking backwards
             continue
+        elif len(path)>1 and v==path[-2] and e[1]>1:  # a real loop of length 2 ?
+            return path + [v]
         else:
-            print len(path)#, path, edge, v
-            return
+#            print len(path), path, edge, v
+            continue
 
 def probe():
-    for source in LIST_JV[1:10]:
+    """ probe the forwarding depth, excluding loops of length 2  """
+    for source in LIST_JV:
         if len(source[1])>0:
             path = [ source[0] ]
-            moveahead( path, LIST_JV[ path[-1] ] )
+            route = moveahead( path )
+            if route!=None:
+                print len(route)-1, source[0], route
+
+probe()
