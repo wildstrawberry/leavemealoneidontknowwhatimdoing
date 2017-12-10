@@ -7,9 +7,9 @@ PHI5 = [[0, 0, 141359947154721358697753474691071362751004672000L], [1, 0, 532743
 
 PHI = [ [], [], PHI2, PHI3, PHI4, PHI5  ]
 
-TOOLONG = 100
+TOOLONG = 200
 
-q = next_prime(11104322200)
+q = next_prime(121043222281)
 FF = FiniteField(q)
 RR.<x> = PolynomialRing(FF)
 print q
