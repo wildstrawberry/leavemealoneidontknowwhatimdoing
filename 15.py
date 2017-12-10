@@ -9,7 +9,7 @@ PHI = [ [], [], PHI2, PHI3, PHI4, PHI5  ]
 
 TOOLONG = 100
 
-q = next_prime(14104321)
+q = next_prime(11104322200)
 FF = FiniteField(q)
 RR.<x> = PolynomialRing(FF)
 print q
@@ -67,7 +67,7 @@ def moveahead(path):
 
 def probe():
     """ probe the forwarding depth, excluding loops of length 2  """
-    for source in range(1,200): #LIST_JV[1:50]:
+    for source in range(1,1000): #LIST_JV[1:50]:
         if len( onesidephi(FC1, source) )>0:
             #print source
             path = [ source ]
