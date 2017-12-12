@@ -9,7 +9,7 @@ PHI = [ [], [], PHI2, PHI3, PHI4, PHI5  ]
 
 TOOLONG = 200
 
-q = next_prime(121043222281)
+q = next_prime(121043222281)  # q=121043222311301, 192, 861, 3
 FF = FiniteField(q)
 RR.<x> = PolynomialRing(FF)
 print q
