@@ -48,9 +48,12 @@ def onesidephi(N, i):
         f = f + (i**monomial[0])*monomial[2]* x^monomial[1]
     return f #.roots()
 
-f1 = onesidephi(3, 15)
-f2 = onesidephi(9, 48)
-f2.gcd(f1)
+S = [15, 48, 23, 29, 34, 55, 71]
+
+for i in range(0,7):
+    f1 = onesidephi(3, S[i])
+    f2 = onesidephi(5, S[(i+1)%7])
+    i, f2.gcd(f1)
 
 def buildedge():
     ls = []
@@ -63,8 +66,6 @@ def buildedge():
     return
 
 #buildedge()
-
-S = [15, 48, 23, 29, 34, 55, 71]
 
 def check_connectivity():
     """ enumerate all the j variants, to see if they are connected """
