@@ -1,6 +1,7 @@
 # http://doc.sagemath.org/html/en/reference/number_fields/sage/rings/number_field/class_group.html
 
 #for d in [-4, -8..-400]:
+
 for k in range(0):
     d = -4*(4*k+1)
     if is_fundamental_discriminant(d) and is_prime(4*k+1):
@@ -10,6 +11,51 @@ for k in range(0):
         print k, d, h, is_prime(h)
         Cl = FF.class_group()
         print [c.representative_prime() for c in Cl]
+
+def findniceclassgroups():
+    for i in range(4):
+      for j in range(4):
+        for k in range(4):
+          for l in range(4):
+            Disc = (2^i)*(3^j)*(5^k)*(7^l)*11*13*17
+            if is_fundamental_discriminant(-Disc):
+                FF = QuadraticField(-Disc, 'a')
+                h = FF.class_number()
+                print "class number", h, i,j,k,l,"Disc", Disc
+                #Cl = FF.class_group()
+                #print [c.representative_prime() for c in Cl]
+
+def findprimeclassgroups(d):
+    if is_fundamental_discriminant(-d):
+        FF = QuadraticField(-d, 'a')
+        h = FF.class_number()
+        #if is_prime(h) and h>1:
+        print d, h, is_prime(h)
+        Cl = FF.class_group()
+        print [c.representative_prime() for c in Cl]
+
+PRIMESET = Primes()
+PSS = PRIMESET[1:1000]  # prime subset
+PSS[1:10]
+PSS[11:20]
+
+for k in range(416, 40):
+    findprimeclassgroups(PSS[k])
+
+def findsmoothclassgroups(z):
+    zbits = bin(z)[3:]  # bin(z)=0b...
+    Disc = 4
+    for i in range(z, z+4):
+        Disc = Disc * PSS[i]
+    if is_fundamental_discriminant(-Disc):
+        FF = QuadraticField(-Disc, 'a')
+        h = FF.class_number()
+        print z, "class number", h, h.factor(), "Disc", Disc, Disc.factor()
+        #Cl = FF.class_group()
+        #print [c.representative_prime() for c in Cl]
+
+for z in range(40, 0):
+    findsmoothclassgroups(z)
 
 def quadratic_character(Disc):
     """ chi_F(n) = Kron( D_F / n ) , D_F is negative for IQF """
@@ -32,38 +78,18 @@ def quadratic_character(Disc):
 for k in range(0):
     quadratic_character(-4*(4*k+1))
     
-def findniceclassgroups():
-    for i in range(4):
-      for j in range(4):
-        for k in range(4):
-          for l in range(4):
-            Disc = (2^i)*(3^j)*(5^k)*(7^l)*11*13*17
-            if is_fundamental_discriminant(-Disc):
-                FF = QuadraticField(-Disc, 'a')
-                h = FF.class_number()
-                print "class number", h, i,j,k,l,"Disc", Disc
-                #Cl = FF.class_group()
-                #print [c.representative_prime() for c in Cl]
-
-PRIMESET = Primes()
-PSS = PRIMESET[1:400]  # prime subset
-PSS[1:10]
-PSS[11:20]
-
-def findsmoothclassgroups(z):
-    zbits = bin(z)[3:]  # bin(z)=0b...
-    Disc = 4
-    for i in range(z, z+4):
-        Disc = Disc * PSS[i]
-    if is_fundamental_discriminant(-Disc):
-        FF = QuadraticField(-Disc, 'a')
+def moreaboutafixedcl(d):
+    if is_fundamental_discriminant(-d):
+        FF = QuadraticField(-d, 'a')
         h = FF.class_number()
-        print z, "class number", h, h.factor(), "Disc", Disc, Disc.factor()
-        #Cl = FF.class_group()
-        #print [c.representative_prime() for c in Cl]
+        #if is_prime(h) and h>1:
+        print d, h, is_prime(h)
+        Cl = FF.class_group()
+        for c1 in Cl[1:4]:
+            for c2 in Cl[1:4]:
+                print c1, c2, c1.representative_prime(), c2.representative_prime(), c1*c2, c1*c2.representative_prime()
 
-for z in range(40, 100):
-    findsmoothclassgroups(z)
+moreaboutafixedcl(2903)
     
 """
 41 class number 21504 2^10 * 3 * 7 Disc 5780560756 2^2 * 191 * 193 * 197 * 199
