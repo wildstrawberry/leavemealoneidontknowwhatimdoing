@@ -3,8 +3,6 @@
 # E: y^2 = x^3 + 30x + 34 mod 631
 # E(K) = 5x130
 
-TH = 10000  # threshold order
-
 q = 631
 FF = FiniteField(q)
 R.<x> = PolynomialRing(FF)
@@ -106,14 +104,3 @@ def FD(m, u1, v1, u2, v2):
 print FD(5, a1, b1, a2, b2)
 print FD(5, a2, b2, a1, b1)
 
-
-
-def Jacobian_order(D):
-    """ input a divisor, output its order """
-    ide = X([1,0])
-    i=2
-    while (i<TH):
-        if i*D == ide:
-            return i
-        else:
-            i=i+1
