@@ -22,6 +22,9 @@ RingN = Integers(NN)
 PolyRingN.<x> = PolynomialRing(RingN)
 print PP, QQ, NN
 
+db = HilbertClassPolynomialDatabase()
+f251 = db[-251]
+
 def PhiEval(N, i, j, m):
     """ eval PHI_N(i,j) mod m  """
     v = 0
