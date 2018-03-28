@@ -13,13 +13,17 @@ for k in range(251,270):
         #print [c.representative_prime() for c in Cl]
 
 def insidecl(d):
-    if is_fundamental_discriminant(-d):
-        FF = QuadraticField(-d, 'a')
-        h = FF.class_number()
-        #if is_prime(h) and h>1:
-        print d, h, is_prime(h)
-        Cl = FF.class_group()
-        for ele in Cl:
-            print ele, ele.representative_prime()
-
-insidecl(255)
+    Hil = db[-d]
+    QD = QuadraticField(-d, 'a')
+    h = QD.class_number()
+    #if is_prime(h) and h>1:
+    print "D = ",d, "class number:", h
+    Cl = QD.class_group()
+    for ele in Cl:
+        print ele, ele.representative_prime()
+    for pp in range(80, 90):
+        if is_prime(pp):
+            FFP = FiniteField(pp)
+            PolyP.<x> = PolynomialRing(FFP)
+            print pp, PolyP(Hil).roots()
+insidecl(251)
