@@ -21,9 +21,30 @@ def insidecl(d):
     Cl = QD.class_group()
     for ele in Cl:
         print ele, ele.representative_prime()
-    for pp in range(80, 90):
+    for pp in range(271,272):
         if is_prime(pp):
             FFP = FiniteField(pp)
             PolyP.<x> = PolynomialRing(FFP)
             print pp, PolyP(Hil).roots()
-insidecl(251)
+
+#insidecl(255)
+
+def clandp(d, p):
+    Hil = db[-d]
+    QD = QuadraticField(-d, 'a')
+    h = QD.class_number()
+    #if is_prime(h) and h>1:
+    print "D = ",d, "class number:", h
+    Cl = QD.class_group()
+    for ele in Cl:
+        print ele, ele.representative_prime()
+    pp = 271
+    FFP = FiniteField(pp)
+    PolyP.<x> = PolynomialRing(FFP)
+    EllP = []
+    for i in FFP:
+        if PolyP(Hil)(i) ==0:
+            EllP.append(i)
+    print pp, EllP
+
+clandp(255, 271)
