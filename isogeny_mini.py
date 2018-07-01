@@ -7,6 +7,10 @@ print E, "j-inv of E: ", E.j_invariant(), "#(E)=", E.count_points(1)
 E2 = EllipticCurve(RRR, [0,0,0,5,0])
 print E2, "j-inv of E2: ", E2.j_invariant(), "#(E2)=", E2.count_points(1)
 R.<x> = RRR[]
+f3 = E.division_polynomial(3)
+print f3
+print f3.roots()
+
 kerf = x - 8
 kerf.roots()
 phi = EllipticCurveIsogeny(E, kerf)  # generate an isogeny from kernel polynomial
