@@ -34,7 +34,7 @@ def LPN_secre():
         LPN.append((-1)**(y%2 + biased_coin(0.1) ))
     return LPN
 
-F = LPN_secre()   # LPN with secret s without noise
+F = LPN_secre()   # LPN with secret s
 
 seq = IndexedSequence(F,J)
 seq
