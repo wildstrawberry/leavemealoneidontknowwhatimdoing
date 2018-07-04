@@ -1,6 +1,6 @@
 #http://sage-doc.sis.uta.fi/reference/calculus/sage/calculus/transforms/dft.html
 import random
-poww = 5
+poww = 6
 N = 2**poww
 
 def biased_coin(prob):
@@ -41,11 +41,12 @@ seq = IndexedSequence(F,J)
 seq
 seqhat = seq.dft()
 lshat = seqhat.list()
-#print "fourier: ", lshat
+print "fourier: ", lshat
+type(lshat[1])
 
 lshatnorm = []
 for i in lshat:
-    lshatnorm.append(i.norm())
+    lshatnorm.append( (i.norm())**(2/N) )  # fix the norm to be L2 norm
 print "norm:", lshatnorm #, lshatnorm[3]/lshatnorm[4]
 normedlshatnorm = [float(i/sum(lshatnorm)) for i in lshatnorm]
 print "normalized", normedlshatnorm
