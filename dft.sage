@@ -1,8 +1,7 @@
 #http://sage-doc.sis.uta.fi/reference/calculus/sage/calculus/transforms/dft.html
 import random
-poww = 4
+poww = 5
 N = 2**poww
-
 
 def biased_coin(prob):
     """ output 1 with probability prob  """
@@ -33,7 +32,7 @@ def LPN_secre():
         y = 0
         for j in range(poww):
             y = y + sv[j]*iv[j]
-        LPN.append((-1)**(y%2 + biased_coin(0.5) ))
+        LPN.append((-1)**(y%2 + biased_coin(0.1) ))
     return LPN
 
 F = LPN_secre()   # LPN with secret s without noise
@@ -42,7 +41,7 @@ seq = IndexedSequence(F,J)
 seq
 seqhat = seq.dft()
 lshat = seqhat.list()
-print "fourier: ", lshat
+#print "fourier: ", lshat
 
 lshatnorm = []
 for i in lshat:
