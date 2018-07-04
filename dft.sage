@@ -24,7 +24,6 @@ J = list(range(N))
 # F = [ZZ(i**2+2*i) for i in J]   # polynomial function
 
 def LPN_secre():
-    """ input a bit string as a list, pad 00..0 ahead of it so that the length of the whole string is tlength """
     sv = int_to_bits_tlength(4, poww)
     LPN = []
     for i in range(N):
