@@ -28,19 +28,16 @@ def onesidephi(N, i):
         f = f + (i**monomial[0])*monomial[2]* x^monomial[1]
     return f.roots()
 
+FC1 = 3  # the degree of isogeny
+
 def buildedge():
     ls = []
-    fc1 = 3
     for i in range(q):
-        g = onesidephi(fc1, i)
-#        if len(g)>0:
-#            print i,fc1,g
+        g = onesidephi(FC1, i)
         ls.append( [ i,g ] )
     return ls
 
 #LIST_JV = buildedge()
-
-FC1 = 3
 
 def moveahead(path):
     """ input: the existing path e.g. [a, b, c];  output [a, b, c, d]   """
