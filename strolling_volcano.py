@@ -51,12 +51,12 @@ def moveahead(path):
             longerpath = path + [v]
             #print longerpath
             return moveahead( longerpath )
-        elif (v in path) and len(path)>1 and v!=path[-2]:
+        elif (v in path) and len(path)>1 and v!=path[-2]: # the normal way of forming a loop of length >2
             #print path
             return path + [v]
-        elif len(path)>1 and v==path[-2] and e[1]==1: # excluding walking backwards
+        elif len(path)>1 and v==path[-2] and e[1]==1: # walking backwards, skip and continue
             continue
-        elif len(path)>1 and v==path[-2] and e[1]>1:  # a real loop of length 2 ?
+        elif len(path)>1 and v==path[-2] and e[1]>1:  # a loop of length 2
             return path + [v]
         else:
 #            print len(path), path, edge, v
