@@ -1,3 +1,7 @@
+from sage.stats.distributions.discrete_gaussian_integer import DiscreteGaussianDistributionIntegerSampler
+from sage.modules.free_module_integer import IntegerLattice
+import random
+
 R = ZZ  # the base ring
 F2 = FiniteField(2)
 
@@ -27,3 +31,25 @@ print Pw2.charpoly(), Pw2.eigenvalues()
 
 #MMMM = block_matrix( [[Iw, Iw],[Iw, Iw]] )
 #NNNN = block_matrix( [[Iw, Pinvw],[Pw, Iw]] )
+
+
+def rand_full_rank_B(k,l,B):
+    """ generate a random full rank matrix whose entries are bounded by [-B, B] """
+    M = Matrix(ZZ,[[random.randint(-B, B) for i in range(l)] for j in range(k)])
+    while M.rank()<k and M.rank()<l:
+        M = Matrix(ZZ,[[random.randint(-B, B) for i in range(l)] for j in range(k)])
+    return M
+
+M1 = rand_full_rank_B(w,w,1)
+M1inv = M1^(-1)
+M2 = rand_full_rank_B(w,w,1)
+M2inv = M2^(-1)
+
+print M1, M1.charpoly()
+print M1inv, M1inv.charpoly()
+print M2, M2.charpoly()
+print M2inv, M2inv.charpoly()
+
+print (M1*M2).charpoly()
+
+print (M2*M1).charpoly()
