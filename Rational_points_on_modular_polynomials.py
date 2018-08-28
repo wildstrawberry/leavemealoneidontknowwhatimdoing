@@ -27,8 +27,37 @@ def onesidephi(N, i):
         f = f + (i**monomial[0])*monomial[2]* x^monomial[1]
     return f
 
-for i in range(-1000,100000):
+for i in range(-100000,100000):
     for n in range(2,6):
         s = onesidephi(n,i)
         if len(s.roots())>0:
-            print n, i, i%1728, s.roots()
+            print "n:", n, "j inv:", i, "j mod 1728:", i%1728, "j's neighbors:", s.roots()
+            
+"""
+n: 2 j inv: -3375 j mod 1728: 81 j's neighbors: [(16581375, 1), (-3375, 2)]
+n: 2 j inv: -1372 j mod 1728: 356 j's neighbors: [(4096766, 1)]
+n: 2 j inv: -432 j mod 1728: 1296 j's neighbors: [(1000188, 1)]
+n: 2 j inv: -64 j mod 1728: 1664 j's neighbors: [(238328, 1)]
+n: 2 j inv: 0 j mod 1728: 0 j's neighbors: [(54000, 3)]
+n: 2 j inv: 128 j mod 1728: 128 j's neighbors: [(10976, 1)]
+n: 2 j inv: 1728 j mod 1728: 0 j's neighbors: [(1728, 1), (287496, 2)]
+n: 2 j inv: 2000 j mod 1728: 272 j's neighbors: [(1098500, 1)]
+n: 2 j inv: 2048 j mod 1728: 320 j's neighbors: [(78608, 1)]
+n: 2 j inv: 2916 j mod 1728: 1188 j's neighbors: [(4293378, 1)]
+n: 2 j inv: 3456 j mod 1728: 0 j's neighbors: [(23328, 1)]
+n: 2 j inv: 4913 j mod 1728: 1457 j's neighbors: [(16974593, 1)]
+n: 2 j inv: 8000 j mod 1728: 1088 j's neighbors: [(8000, 1)]
+n: 3 j inv: -208 j mod 1728: 1520 j's neighbors: [(-368484688, 1)]
+n: 3 j inv: 0 j mod 1728: 0 j's neighbors: [(0, 1), (-12288000, 3)]
+n: 3 j inv: 432 j mod 1728: 432 j's neighbors: [(-316368, 1)]
+n: 3 j inv: 1792 j mod 1728: 64 j's neighbors: [(406749952, 1)]
+n: 3 j inv: 2160 j mod 1728: 432 j's neighbors: [(16541040, 1)]
+n: 3 j inv: 6912 j mod 1728: 0 j's neighbors: [(790272, 1)]
+n: 3 j inv: 8000 j mod 1728: 1088 j's neighbors: [(8000, 2)]
+n: 4 j inv: -3375 j mod 1728: 81 j's neighbors: [(16581375, 2), (-3375, 2)]
+n: 4 j inv: 1728 j mod 1728: 0 j's neighbors: [(287496, 2)]
+n: 5 j inv: 64 j mod 1728: 64 j's neighbors: [(-23788477376, 1)]
+n: 5 j inv: 1600 j mod 1728: 1600 j's neighbors: [(-2194880, 1)]
+n: 5 j inv: 1728 j mod 1728: 0 j's neighbors: [(1728, 2)]
+n: 5 j inv: 4096 j mod 1728: 640 j's neighbors: [(38477541376, 1)]
+"""
