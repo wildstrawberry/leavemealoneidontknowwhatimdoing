@@ -98,5 +98,8 @@ n: 13 j inv: 576 j mod 1728: 576 j's neighbors: [(-39091613782464, 1)]
 n: 13 j inv: 1728 j mod 1728: 0 j's neighbors: [(1728, 2)]
 n: 13 j inv: 54000 j mod 1728: 432 j's neighbors: [(54000, 2)]
 n: 13 j inv: 287496 j mod 1728: 648 j's neighbors: [(287496, 2)]
+n: 17 j inv: 1728 j mod 1728: 0 j's neighbors: [(1728, 2)]
+n: 17 j inv: 8000 j mod 1728: 1088 j's neighbors: [(8000, 2)]
+n: 17 j inv: 287496 j mod 1728: 648 j's neighbors: [(287496, 2)]
 
 """
