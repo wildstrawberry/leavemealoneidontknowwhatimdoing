@@ -110,3 +110,17 @@ n: 41 j inv: 1728 j mod 1728: 0 j's neighbors: [(1728, 2)]
 n: 41 j inv: 8000 j mod 1728: 1088 j's neighbors: [(8000, 2)]
 n: 41 j inv: 287496 j mod 1728: 648 j's neighbors: [(287496, 2)]
 """
+
+
+"""
+n: 3 j inv: 95/832 j's neighbors: [(-83787537505/8788, 1)]
+n: 3 j inv: 23/4 j's neighbors: [(-313994137/64, 1)]
+n: 3 j inv: 119/2000 j's neighbors: [(-205118348281/20480, 1)]
+n: 3 j inv: 135/8 j's neighbors: [(-6699465/2, 1)]
+n: 3 j inv: 47/56 j's neighbors: [(-5165405233/686, 1)]
+n: 3 j inv: 71/270 j's neighbors: [(-26390342089/3000, 1)]
+n: 3 j inv: 176/5 j's neighbors: [(-296587984/125, 1)]
+n: 3 j inv: 47/56 j's neighbors: [(-5165405233/686, 1)]
+n: 3 j inv: 189/2 j's neighbors: [(-10353819/8, 1)]
+n: 3 j inv: 189/512 j's neighbors: [(-67645179/8, 1)]
+"""
