@@ -123,4 +123,7 @@ n: 3 j inv: 176/5 j's neighbors: [(-296587984/125, 1)]
 n: 3 j inv: 47/56 j's neighbors: [(-5165405233/686, 1)]
 n: 3 j inv: 189/2 j's neighbors: [(-10353819/8, 1)]
 n: 3 j inv: 189/512 j's neighbors: [(-67645179/8, 1)]
+
+n: 5 j inv: 64/9 j's neighbors: [(-873722816/59049, 1)]
+
 """
