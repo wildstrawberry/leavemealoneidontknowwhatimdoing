@@ -1,12 +1,47 @@
 from sage.stats.distributions.discrete_gaussian_integer import DiscreteGaussianDistributionIntegerSampler
 from sage.modules.free_module_integer import IntegerLattice
+import random
+
+B_small = 5000
+dim = 130  # dim >= 10
+dimprint = 3  # dimprint < dim
+dim2 = 5#dim
+dim3 = dim+5
+B_large = (B_small*dim)^3#^(dim/2)
+print B_small, dim, B_large
+
+def biased_coin(prob):
+    """ output 1 with probability prob  """
+    rand = random.random()
+    if rand < prob: return 1
+    else: return 0
+
+def rand_full_rank_B(k,l,B):
+    """ generate a random full rank matrix whose entries are bounded by [-B, B] """
+    M = Matrix(ZZ,[[random.randint(-B, B) for i in range(l)] for j in range(k)])
+    while M.rank()<k and M.rank()<l:
+        M = Matrix(ZZ,[[random.randint(-B, B) for i in range(l)] for j in range(k)])
+    return M
+
+def rand_matrix_Hamming(k,l,prob):
+    """ generate a random matrix with hamming weight prob* dim """
+    M = Matrix(ZZ,[[biased_coin(prob) for i in range(l)] for j in range(k)])
+    return M
 
 def test_LLL_toy():
-    L = IntegerLattice( [ [2,8,0, 0],[3,1,0,0], [0,0,1,2], [0,0,32,1] ]  )
-    L2 = IntegerLattice( [ [2,8],[32,72], [20,10] ]  )
-    print "L = ", L2
-    print L2.volume()
-    print L2.shortest_vector()
+    #L = IntegerLattice( [ [2,8,0, 0],[3,1,0,0], [0,0,1,2], [0,0,32,1] ]  )
+    #L = IntegerLattice( [ [2,8],[32,72], [20,10] ]  )
+    #Basis = rand_matrix_Hamming(40, 60, 0.5)
+    Basis = rand_full_rank_B(dim, dim, B_small)
+    #print Basis
+    L = IntegerLattice( Basis )
+    print "L = ", L # already LLL reduced, oops
+    print L.volume()^2
+    print L.shortest_vector()
+    #aList = [3,41,5,6,6,26,7]
+    #aList.sort()
+    #print aList
+test_LLL_toy()
 
 
 def test_SVP(m):
