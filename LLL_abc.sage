@@ -28,11 +28,16 @@ def rand_matrix_Hamming(k,l,prob):
     M = Matrix(ZZ,[[biased_coin(prob) for i in range(l)] for j in range(k)])
     return M
 
+def special(k,B):
+    """ generate a special basis """
+    M = Matrix(ZZ,[[ (int(i==j) + random.randint(-B, B)*int(i==k-1) ) for i in range(k)] for j in range(k)])
+    return M
+
 def test_LLL_toy():
     #L = IntegerLattice( [ [2,8,0, 0],[3,1,0,0], [0,0,1,2], [0,0,32,1] ]  )
     #L = IntegerLattice( [ [2,8],[32,72], [20,10] ]  )
     #Basis = rand_matrix_Hamming(40, 60, 0.5)
-    Basis = rand_full_rank_B(dim, dim, B_small)
+    Basis = special(dim, B_large)
     #print Basis
     L = IntegerLattice( Basis )
     print "L = ", L # already LLL reduced, oops
