@@ -1,5 +1,3 @@
-TH = 2000  # threshold order
-
 q = 1009
 FF = FiniteField(q)
 RR.<x> = PolynomialRing(FF)
@@ -19,6 +17,7 @@ JD = D.jacobian()(FF)
 charpolyD = D.frobenius_polynomial()
 print "Frobenius:", charpolyD, " #Jac(D) = ", charpolyD(1), factor(charpolyD(1))
 
+# the numerators and denominators of the isogeny
 SXN = 354*(x^5 + 647*x^4 + 931*x^3 + 597*x^2 + 73*x + 361)
 PXN = 50*(x^5 + 262*x^4 + 812*x^3 + 770*x^2 + 868*x + 314)
 XD = x^5 + 832*x^4 + 811*x^3 + 215*x^2 + 420*x
@@ -34,76 +33,6 @@ T1 = x^2 + 247*x + 67
 T2 = x^2 + 903*x + 350
 print T1.factor(), T2.factor()
 
-Y1 = JD([ x^2 - SXN(-510)/XD(-510)*x + PXN(-510)/XD(-510), (599-261*510)*(TYN(-510) + x*RYN(-510))/YD(-510)  ])
-Y2 = JD([ x^2 - SXN(-746)/XD(-746)*x + PXN(-746)/XD(-746), (599-261*746)*(TYN(-746) + x*RYN(-746))/YD(-746)  ])
-print Y1, Y2, Y1+Y2
-
-
-def Jacobian_order(D):
-    """ input a divisor, output its order """
-    ide = X([1,0])
-    i=2
-    while (i<TH):
-        if i*D == ide:
-            return i
-        else:
-            i=i+1
-
-def iterrule(i,j,k,l):
-    l+=1
-    if l==q:
-        l=0
-        k+=1
-        if k==q:
-            k=0
-            j+=1
-            if j==q:
-                j=0
-                i+=1
-    return i,j,k,l
-
-def factor_torsion(n):
-    """ return 1 if n has factors 3, 5 with multiplicity >3 """
-    return (gcd(n, 343) == 343)
-
-def my_mind_is_blowing():
-    mind = []
-    i, j, k, l = 0, 0, 0, 0
-    while(len(mind)<40 or i==q):
-        try:
-            fff = x**5 + 0*x**4 + i*x**3 + j*x**2 + k*x + l
-            i,j,k,l = iterrule(i,j,k,l)
-            C = HyperellipticCurve(fff)
-            J = C.jacobian()
-            X = J(FF)
-            ch = C.frobenius_polynomial()
-            if factor_torsion(ch(1)):
-                mind.append(C)
-                print "C:", C, "Frobenius:", ch, " #J(C) = ", ch(1), factor(ch(1))
-        except ValueError:
-            continue
-    return mind
-
-#print my_mind_is_blowing()
-
-def Jacobian_find_torsion():
-    """ Find group structure on jacobian by enumerating the coefficients """
-    points = [] # list of all the points enumerated
-    i, j, k, l = 0, 0, 0, 0
-    while(len(points)<10 or i==q):
-        a = x**2 + i*x + j
-        b = k*x + l  # TBD: compute b by taking square root mod a
-        i,j,k,l = iterrule(i,j,k,l)
-        try:
-            D = X([a,b])
-            points.append(D)
-            print Jacobian_order(D), a, b
-            if gcd(5,Jacobian_order(D))==5:
-                print int(Jacobian_order(D)/5)*D
-        except ValueError:
-            continue
-    #print "Number of points:", len(points)
-    return points
-
-#D = X([x,24])
-#print D
+Y11 = JD([ x^2 - SXN(-510)/XD(-510)*x + PXN(-510)/XD(-510), (599-261*510)*(TYN(-510) + x*RYN(-510))/YD(-510)  ])
+Y12 = JD([ x^2 - SXN(-746)/XD(-746)*x + PXN(-746)/XD(-746), (599-261*746)*(TYN(-746) + x*RYN(-746))/YD(-746)  ])
+print "evalutaions on the roots of the kernel:", Y11, Y12, Y11+Y12
