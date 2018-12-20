@@ -11,9 +11,9 @@ QQ = 109
 FF = FiniteField(QQ)
 RR.<x> = PolynomialRing(FF)
 
-LAM, MU, NU = QQ-33, QQ-61, QQ-98   # Example 4.4 of http://www.normalesup.org/~robert/pro/publications/articles/niveau.pdf
+LAM, MU, NU = FF(-33), FF(-61), FF(-98)  # Example 4.4 of [3]
 FF0 = x*(x-1)*(x-LAM)*(x-MU)*(x-NU)   #Rosenhaim form
-#FF0 = x^5 + 82*x^4 + 24*x^3 + 95*x^2 + 16*x
+#FF0 = x^5 + 82*x^4 + 24*x^3 + 95*x^2 + 16*x  mod 109
 CC0 = HyperellipticCurve(FF0)
 print CC0, FF0.factor()
 JAC0 = CC0.jacobian()(FF)
@@ -23,8 +23,28 @@ print "#J(C) and its factorization:", CH0(1), factor(CH0(1))#, "a point on the J
 
 Lev = 2  # level of theta coordinates
 
-def convert_Rosenhaim_to_theta():
-    return
+def convert_Rosenhaim_to_theta_null():
+    """ Input lam, mu, nu, output the theta null. [3, p13]  """
+    theta0 = FF(2)
+    theta1 = FF(97)
+    theta2 = FF(70)  # this is the 4th number of Example 4.4
+    theta3 = FF(44)  # this is the 3rd number of Example 4.4
+    print "reference group", (theta1/theta0)^4, (theta2/theta0)^4, (theta3/theta0)^4
+
+    theta_4_0_P4 = MU/(LAM*NU)
+    theta_1_0_P4 = MU*(NU-1)*(LAM-1)/(LAM*NU*(MU-1))   #order of nu and lam doesn't matter for 1/0
+    theta_8_0_P4 = MU*(NU-1)*(LAM-MU)*MU/(NU*(MU-1)*(LAM-NU))
+    theta_2_0_P4 = MU*(LAM-1)*(NU-MU)/(LAM*(MU-1)*(NU-LAM))
+    print "init power of 4 theta ratios", theta_1_0_P4, theta_2_0_P4, theta_4_0_P4, theta_8_0_P4
+    theta_1_0_P2 = theta_1_0_P4.sqrt()
+    theta_4_0_P2 = theta_4_0_P4.sqrt()
+    theta_6_P2 = theta2^2/(NU*theta_4_0_P2)
+    theta_3_P2 = (NU-1)*theta_6_P2*(theta_4_0_P2)/(theta_1_0_P2)
+    print theta_4_0_P2, theta_3_P2, (theta_3_P2/(theta0^2))^2
+    return theta0, theta1, theta2, theta3
+
+THETA0, THETA1, THETA2, THETA3 = convert_Rosenhaim_to_theta_null()
+print THETA0, THETA1, THETA2, THETA3
 
 def Jacobian_order(D):
     """ input a divisor, output its order """
