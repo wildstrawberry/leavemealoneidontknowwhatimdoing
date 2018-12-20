@@ -7,20 +7,21 @@
 # http://www.normalesup.org/~robert/pro/publications/slides/2010-07-Phd-Nancy.pdf
 
 TH = 200  # a threshold for enumeration
-QQ = 31
+QQ = 109
 FF = FiniteField(QQ)
 RR.<x> = PolynomialRing(FF)
 
-LAMB, MU, NU = 2, 5, 7   #Rosenhaim form
-FF0 = x*(x-1)*(x-LAMB)*(x-MU)*(x-NU)
+LAM, MU, NU = QQ-33, QQ-61, QQ-98   # Example 4.4 of http://www.normalesup.org/~robert/pro/publications/articles/niveau.pdf
+FF0 = x*(x-1)*(x-LAM)*(x-MU)*(x-NU)   #Rosenhaim form
+#FF0 = x^5 + 82*x^4 + 24*x^3 + 95*x^2 + 16*x
 CC0 = HyperellipticCurve(FF0)
-print CC0#, FF0.factor()
+print CC0, FF0.factor()
 JAC0 = CC0.jacobian()(FF)
 CH0 = CC0.frobenius_polynomial() #charpoly of Frobenius
-DD0 = JAC0([x^2 + 11, 15*x + 23])  # order = 12
-print "#J(C) and its factorization:", CH0(1), factor(CH0(1)), "a point on the Jac", DD0
+#DD0 = JAC0([x^2 + 11, 15*x + 23])  # order = 12
+print "#J(C) and its factorization:", CH0(1), factor(CH0(1))#, "a point on the Jac", DD0
 
-Lev = 4  # level of theta coordinates
+Lev = 2  # level of theta coordinates
 
 def convert_Rosenhaim_to_theta():
     return
