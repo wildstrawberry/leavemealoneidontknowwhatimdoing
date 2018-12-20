@@ -12,19 +12,19 @@ PP = 331
 FF = FiniteField(PP)
 RR.<x> = PolynomialRing(FF)
 
-#LAMB, MU, NU = 2, 5, 7   #Rosenhaim form
-HF = x^5 + 204*x^4 + 198*x^3 + 80*x^2 + 179*x
+LAM, MU, NU = PP - 35, PP - 42, PP - 128   #Rosenhaim form
+HF = x * (x - 1) * (x - LAM) * (x - MU) * (x - NU)    #x * (x + 35) * (x + 42) * (x + 128) * (x + 330)
 CC = HyperellipticCurve(HF)
-print CC, "factors of f:", HF.factor()
+print CC #, "factors of f:", HF.factor()
 JAC = CC.jacobian()(FF)
 CH = CC.frobenius_polynomial() #charpoly of Frobenius
 print "#J(C) and its factorization:", CH(1), factor(CH(1))#, "a point on the Jac", DD0
 
 Lev = 2  # level of theta coordinates
-ThetaNull = [328, 213, 75, 1]  # why?
-P = [255, 89, 30, 1]  # need the convertion between theta and mumford to see what happened...
+#ThetaNull = [328, 213, 75, 1]  # why?
+#P = [255, 89, 30, 1]  # need the convertion between theta and mumford to see what happened...
 #DD0 = JAC([x^2 + 11, 15*x + 23])  # order = ?
-Q = []
+#Q = []
 
 def Jacobian_order(D):
     """ input a divisor, output its order """
