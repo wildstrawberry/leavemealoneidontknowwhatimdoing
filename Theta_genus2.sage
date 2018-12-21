@@ -79,16 +79,16 @@ def Mumford_to_theta(u, x1, y1, x2, y2):
     t13_tphi_P2 = Y13^2/(u(AA[1])*u(AA[3]))
     theta3_P2 = t13_tphi_P2 * (THETA3/THETA0)^2
     print theta0_P2, theta1_P2, theta2_P2, theta3_P2, theta0_P2/theta1_P2, theta0_P2/theta2_P2, theta0_P2/theta3_P2
-    print "reference points", FF(35)^2, FF(63)^2, FF(68)^2, FF(67)^2, FF(35)^2/FF(63)^2, FF(35)^2/FF(68)^2, FF(68)^2/FF(67)^2
-    return theta0_P2, theta2_P2
+    print "reference points", FF(35)^2, FF(63)^2, FF(68)^2, FF(67)^2, FF(35)^2/FF(63)^2, FF(35)^2/FF(68)^2, FF(35)^2/FF(67)^2
+    return theta0_P2, theta1_P2, theta2_P2, theta3_P2
 
 U_P, V_P = x^2 + 53*x + 28, 29*x
 U_Q, V_Q = x^2 + 32*x + 1, 52*x+41
 print U_P.roots(), U_Q.roots()
-X1_P, X2_P, Y1_P, Y2_P = FF(87), FF(78), V_P(87), V_P(78)
+X1_P, Y1_P, X2_P, Y2_P = FF(78), V_P(78), FF(87), V_P(87)
 
-print Mumford_to_theta(U_P, X1_P, X2_P, Y1_P, Y2_P)
+print Mumford_to_theta(U_P, X1_P, Y1_P, X2_P, Y2_P)
 
 D_P = JAC0([U_P, V_P ])  # order = 3
 D_Q = JAC0([U_Q, V_Q ])  # order = 3
-#print Jacobian_order(D_P), Jacobian_order(D_Q)
+print D_P, D_Q
