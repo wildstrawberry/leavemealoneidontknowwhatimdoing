@@ -12,8 +12,8 @@ QQ = 109
 FF = FiniteField(QQ)
 RR.<x> = PolynomialRing(FF)
 
-AA = [0, FF(0), FF(1), FF(-33), FF(-61), FF(-98)]
-LAM, MU, NU = AA[3], AA[4], AA[5]  # Example 4.4 of [3]
+AA = [0, FF(-98), FF(-61), FF(-33), FF(1), FF(0)]  # under Gaudry numbering
+LAM, MU, NU = FF(-33), FF(-61), FF(-98)  # Example 4.4 of [3]
 FF0 = x*(x-1)*(x-LAM)*(x-MU)*(x-NU)   #Rosenhaim form
 #FF0 = x^5 + 82*x^4 + 24*x^3 + 95*x^2 + 16*x  mod 109
 CC0 = HyperellipticCurve(FF0)
@@ -33,11 +33,11 @@ def Jacobian_order(D):
             i=i+1
 
 def Rosenhaim_to_theta_null():
-    """ Input lam, mu, nu, output the theta null. [3, p13]  """
+    """ Input lam, mu, nu, output the theta null. [3, p13], under [3] numbering  """
     theta0 = FF(2)   # fix a theta 0 first
     theta1 = FF(97)
-    theta2 = FF(70)  # this is the 4th number of Example 4.4
-    theta3 = FF(44)  # this is the 3rd number of Example 4.4
+    theta2 = FF(70)  # this is the 4th number of [3] Example 4.4
+    theta3 = FF(44)  # this is the 3rd number of [3] Example 4.4
     print "reference points, 4th power of 1/0, 2/0, 3/0", (theta1/theta0)^4, (theta2/theta0)^4, (theta3/theta0)^4
 
     theta_4_0_P4 = MU/(LAM*NU)
@@ -47,24 +47,35 @@ def Rosenhaim_to_theta_null():
     print "init 4th power of 1/0, 2/0, 4/0, 8/0", theta_1_0_P4, theta_2_0_P4, theta_4_0_P4, theta_8_0_P4
 
     theta_1_0_P2 = theta_1_0_P4.sqrt()
-    theta_4_0_P2 = theta_4_0_P4.sqrt()
+    print "1/0 check", theta_1_0_P2, FF(97/2)^2
+    theta_4_0_P2 = FF(theta_4_0_P4.sqrt())
+    print "4/0 check, inconsistent here", theta_4_0_P2, (theta0^2 - theta3^2 - theta1^2 + theta2^2)/(4*theta0^2)
     theta_6_P2 = theta2^2/(NU*theta_4_0_P2) #need theta2
-    #theta_12_P2 = theta2^2/(NU*theta_4_0_P2) #need theta2
     theta_3_P2 = (NU-1)*theta_6_P2*(theta_4_0_P2)/(theta_1_0_P2)
-    print "deriving 4th power of 3/0", (theta_3_P2/(theta0^2))^2
-    #wrap up stage; if all what we need is level 2 then we are done
-    #theta4 = (theta_4_0_P2.sqrt())*theta0
-    return theta0, theta1, theta2, theta3
+    print "double check: deriving 4th power of 3/0", (theta_3_P2/(theta0^2))^2
+    #wrap up stage, the square of 4, 8, 12 (Gaudry's 5,7,8) are needed for the duplication formula;
+    theta_4_P2 = theta_4_0_P2 * theta0^2
+    theta_8_P2 = (theta_8_0_P4.sqrt()) * theta0^2
+    theta_12_P2 = theta_8_P2/(LAM*theta_4_0_P2) #need theta2
+    return theta0, theta1, theta2, theta3, theta_4_P2, theta_8_P2, theta_12_P2
 
-THETA0, THETA1, THETA2, THETA3 = Rosenhaim_to_theta_null()
-print THETA0, THETA1, THETA2, THETA3
+THETA0, THETA1, THETA2, THETA3, THETA4_P2, THETA8_P2, THETA12_P2 = Rosenhaim_to_theta_null()
+print "Theta null at level 2:", THETA0, THETA1, THETA2, THETA3, THETA4_P2, THETA8_P2, THETA12_P2, "\n"
+
+def lvl2_to_sqlvl22(P0):
+    """ from level 2 to square of level (2,2); rosenhain.m follows the Gaudry numbering"""
+
+def sqlvl22_to_lvl2(z1, z2, z3, z4):
+    """ from square of level (2,2) to level 2; rosenhain.m follows the Gaudry numbering"""
+    T2z1 = (z1+z2+z3+z4)
+
 
 def Mumford_to_Ylm(x1, y1, x2, y2, al, am):
     """ an assistant function defined in [6] used in [3] """
     return (y1*(x2-al)*(x2-am) - y2*(x1-al)*(x1-am))/(x2-x1)
 
-def Mumford_to_theta(u, x1, y1, x2, y2):
-    """ Input mumford coordinate, output theta coordinate of level 2, rosenhain.m follows the Gaudry numbering  """
+def Mumford_to_theta_P2(u, x1, y1, x2, y2):
+    """ Input mumford coordinate, output the square of theta 1-4 level (2,2), rosenhain.m follows the Gaudry numbering  """
     """ (c12* tlm/tphi)^2 = Ylm^2/U  """
     Y24 = Mumford_to_Ylm(x1, y1, x2, y2, AA[2], AA[4])
     t24_tphi_P2 = Y24^2/(u(AA[2])*u(AA[4]))
@@ -78,17 +89,19 @@ def Mumford_to_theta(u, x1, y1, x2, y2):
     Y13 = Mumford_to_Ylm(x1, y1, x2, y2, AA[1], AA[3])
     t13_tphi_P2 = Y13^2/(u(AA[1])*u(AA[3]))
     theta3_P2 = t13_tphi_P2 * (THETA3/THETA0)^2
-    print theta0_P2, theta1_P2, theta2_P2, theta3_P2, theta0_P2/theta1_P2, theta0_P2/theta2_P2, theta0_P2/theta3_P2
-    print "reference points", FF(35)^2, FF(63)^2, FF(68)^2, FF(67)^2, FF(35)^2/FF(63)^2, FF(35)^2/FF(68)^2, FF(35)^2/FF(67)^2
     return theta0_P2, theta1_P2, theta2_P2, theta3_P2
 
 U_P, V_P = x^2 + 53*x + 28, 29*x
 U_Q, V_Q = x^2 + 32*x + 1, 52*x+41
 print U_P.roots(), U_Q.roots()
 X1_P, Y1_P, X2_P, Y2_P = FF(78), V_P(78), FF(87), V_P(87)
+# the possible problems: (1) maybe the numbering of a, (2) maybe z versus 2z.
+print "reference points", FF(35)^2, FF(63)^2, FF(68)^2, FF(67)^2, FF(35)^2/FF(63)^2, FF(35)^2/FF(68)^2, FF(35)^2/FF(67)^2
 
-print Mumford_to_theta(U_P, X1_P, Y1_P, X2_P, Y2_P)
+P_theta0_P2, P_theta1_P2, P_theta2_P2, P_theta3_P2 = Mumford_to_theta_P2(U_P, X1_P, Y1_P, X2_P, Y2_P)
+print "square of theta(z):", P_theta0_P2, P_theta1_P2, P_theta2_P2, P_theta3_P2#, P_theta0_P2/P_theta1_P2
+Mumford_to_theta_P2(U_P, X1_P, Y1_P, X2_P, Y2_P)
 
-D_P = JAC0([U_P, V_P ])  # order = 3
-D_Q = JAC0([U_Q, V_Q ])  # order = 3
+D_P = JAC0([U_P, V_P])  # order = 3
+D_Q = JAC0([U_Q, V_Q])  # order = 3
 print D_P, D_Q
