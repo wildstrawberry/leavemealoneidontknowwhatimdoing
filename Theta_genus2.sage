@@ -37,8 +37,8 @@ def Rosenhaim_to_theta_null():
     """ Input lam, mu, nu, output the theta null. [3, p13], according to CR11 numbering  """
     theta0 = FF(2)   # fix a theta 0 first
     theta1 = FF(97)
-    theta2 = FF(70)  # this is the 4th number of [3] Example 4.4
-    theta3 = FF(44)  # this is the 3rd number of [3] Example 4.4
+    theta2 = FF(44) #FF(70)  # this is the 4th number of [3] Example 4.4
+    theta3 = FF(70) #FF(44) # this is the 3rd number of [3] Example 4.4
     print "reference points, 4th power of 1/0, 2/0, 3/0", (theta1/theta0)^4, (theta2/theta0)^4, (theta3/theta0)^4
 
     theta_1_0_P4 = MU*(NU-1)*(LAM-1)/(LAM*NU*(MU-1))   #order of nu and lam doesn't matter for 1/0
@@ -75,10 +75,10 @@ def sqlvl22_to_lvl2(theta0_P2, theta1_P2, theta2_P2, theta3_P2):
     THETA2_2z_P2 = (theta0_P2 + theta3_P2 - theta1_P2 - theta2_P2)^2/(16*THETA2_P2)
     THETA3_2z_P2 = (theta0_P2 - theta3_P2 + theta1_P2 - theta2_P2)^2/(16*THETA3_P2)
     THETA4_2z_P2 = (theta0_P2 - theta3_P2 - theta1_P2 + theta2_P2)^2/(16*THETA4_P2)
-    theta0_2z_P2 = (THETA1_2z_P2 + THETA2_2z_P2 + THETA3_2z_P2 + THETA4_2z_P2)^2/theta0_P2
-    theta3_2z_P2 = (THETA1_2z_P2 + THETA2_2z_P2 - THETA3_2z_P2 - THETA4_2z_P2)^2/theta3_P2
-    theta1_2z_P2 = (THETA1_2z_P2 - THETA2_2z_P2 + THETA3_2z_P2 - THETA4_2z_P2)^2/theta1_P2
-    theta2_2z_P2 = (THETA1_2z_P2 - THETA2_2z_P2 - THETA3_2z_P2 + THETA4_2z_P2)^2/theta2_P2
+    theta0_2z_P2 = (THETA1_2z_P2 + THETA2_2z_P2 + THETA3_2z_P2 + THETA4_2z_P2)^2/(theta0^2)
+    theta3_2z_P2 = (THETA1_2z_P2 + THETA2_2z_P2 - THETA3_2z_P2 - THETA4_2z_P2)^2/(theta3^2)
+    theta1_2z_P2 = (THETA1_2z_P2 - THETA2_2z_P2 + THETA3_2z_P2 - THETA4_2z_P2)^2/(theta1^2)
+    theta2_2z_P2 = (THETA1_2z_P2 - THETA2_2z_P2 - THETA3_2z_P2 + THETA4_2z_P2)^2/(theta2^2)
     return theta0_2z_P2, theta1_2z_P2, theta2_2z_P2, theta3_2z_P2, theta0_2z_P2/theta1_2z_P2, theta0_2z_P2/theta2_2z_P2, theta0_2z_P2/theta3_2z_P2
 
 
@@ -87,7 +87,8 @@ def Mumford_to_Ylm(x1, y1, x2, y2, al, am):
     return (y1*(x2-al)*(x2-am) - y2*(x1-al)*(x1-am))/(x2-x1)
 
 def Mumford_to_theta_P2(u, x1, y1, x2, y2):
-    """ Input mumford coordinate, output the square of theta 1-4 level (2,2), rosenhain.m follows the Gaudry numbering  """
+    """ Input mumford coordinate, output the square of theta 1-4 level (2,2)"""
+    """ the formula is obtained from [3] p17-19 """
     """ (c12* tlm/tphi)^2 = Ylm^2/U  """
     Y24 = Mumford_to_Ylm(x1, y1, x2, y2, AA[2], AA[4])
     t24_tphi_P2 = Y24^2/(u(AA[2])*u(AA[4]))
@@ -106,7 +107,7 @@ def Mumford_to_theta_P2(u, x1, y1, x2, y2):
 U_P, V_P = x^2 + 53*x + 28, 29*x
 U_Q, V_Q = x^2 + 32*x + 1, 52*x+41
 print U_P.roots(), U_Q.roots()
-X1_P, Y1_P, X2_P, Y2_P =  FF(87), V_P(87), FF(78), V_P(78)
+X1_P, Y1_P, X2_P, Y2_P = FF(78), V_P(78), FF(87), V_P(87)
 # the possible problems: (1) maybe the order of a
 print "reference point of P:", FF(35)^2, FF(63)^2, FF(68)^2, FF(67)^2, FF(35)^2/(FF(63)^2), FF(35)^2/FF(68)^2, FF(35)^2/FF(67)^2
 
