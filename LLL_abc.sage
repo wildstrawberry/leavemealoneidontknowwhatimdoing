@@ -33,6 +33,23 @@ def special(k,B):
     M = Matrix(ZZ,[[ (int(i==j) + random.randint(-B, B)*int(i==k-1) ) for i in range(k)] for j in range(k)])
     return M
 
+def attack_knapsack(n,w):
+    """ assume the knapsack instance is given by sum_{ai, xi} = 1, of n entries, each ai is of weight w """
+    """ using the LLL attack on knapsack of , see https://web.eecs.umich.edu/~cpeikert/lic13/lec05.pdf """
+    A = [ random.randint(1, w) for i in range(n) ]
+    print A, sum(A)
+    A = A + [sum(A)]
+    B = n*2^(n/2)
+    M = Matrix(ZZ,[[ (int(i==j) + (-B*A[j])*int(i==n and j!=n) ) + (B*A[j]-1)*int(i==j and i ==n)   for i in range(n+1)] for j in range(n+1)])
+    print M
+    L = IntegerLattice( M )
+    print "L = ", L # already LLL reduced, oops
+    print L.volume()^2
+    x = L.shortest_vector()
+    print x
+
+#attack_knapsack(4, 2^16)
+
 def test_LLL_toy():
     #L = IntegerLattice( [ [2,8,0, 0],[3,1,0,0], [0,0,1,2], [0,0,32,1] ]  )
     #L = IntegerLattice( [ [2,8],[32,72], [20,10] ]  )
