@@ -67,13 +67,24 @@ test_LLL_toy()
 
 def lattice_intersection():
     """ produce the intersection of two lattices by taking the dual, then the union, then the dual...oops there is a button """
-
     L1 = IntegerLattice( [ [2, -1, 0, 0, 0],[0, 2, -1, 0, 0], [0,0,2, -1, 0 ],[0,0,0,2, -1 ], [1,1,1,1,1] ]  )
     L2 = IntegerLattice( [ [2, -1, 0,0, 0],[0, 2, -1,0, 0], [0,0,0, 1,0], [0,0,0,0, 1] ]  )
-
     print "L1 = ", L1 # the basis in the output is already LLL reduced
     print "L2 = ", L2
     print L1.intersection(L2)
+    B12 = L2.intersection(L1).basis()
+    M12 = Pw*Matrix(B12)
+    M12T = M12.transpose()
+    M12Tdual = M12T*(( M12T.transpose()*M12T ).inverse())
+    M12dual = M12Tdual.transpose()
+    print M12dual
+
+    B12dual = IntegerLattice( 21*31*M12dual )
+    print "L12 dual:", B12dual
+    print "The basis of L1 intersect L2:", M12, "the norm:", M12.norm()
+    G, M = M12.gram_schmidt()
+    print "G of the basis:", G, "the norm:", G.norm()
+    print "M of the basis:", M, "the norm:", M.norm()
     
 lattice_intersection()
 
