@@ -69,6 +69,7 @@ def lattice_intersection():
     """ produce the intersection of two lattices by taking the dual, then the union, then the dual...oops there is a button """
     L1 = IntegerLattice( [ [2, -1, 0, 0, 0],[0, 2, -1, 0, 0], [0,0,2, -1, 0 ],[0,0,0,2, -1 ], [1,1,1,1,1] ]  )
     L2 = IntegerLattice( [ [2, -1, 0,0, 0],[0, 2, -1,0, 0], [0,0,0, 1,0], [0,0,0,0, 1] ]  )
+    #    L2 = IntegerLattice( [ [1, 0, 0,0, 0],[0, 0, 1,0, 0],[0, 1, 0,0, 0]]  )
     print "L1 = ", L1 # the basis in the output is already LLL reduced
     print "L2 = ", L2
     print L1.intersection(L2)
