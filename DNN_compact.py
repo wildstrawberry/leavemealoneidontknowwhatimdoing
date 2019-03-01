@@ -56,3 +56,14 @@ for t in range(ITER+1):
         w[depthH-1-i] += learning_rate * htemp[depthH-1-i].T.dot(hdelta[-1])
 
 #print w[0], w[1]
+#test group
+def test():
+    x = np.random.randint(2, size=(N, D_in))
+    y = [ [ xx[0], 1-xx[0] ] for xx in x ]
+    h_test = x
+    for i in xrange(1,depthH):
+        h_test =  nonlin(np.dot( h_test , w[i-1] )) 
+    # Compute and print loss
+    loss = np.square(h_test - y).sum()
+    print "test => loss in the l2 norm:", loss, "; mean loss in the l1 norm:", np.mean(np.abs(y - h_test))
+test()
