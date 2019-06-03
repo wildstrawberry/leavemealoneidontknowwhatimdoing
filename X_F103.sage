@@ -41,52 +41,11 @@ def onesidephi_fun(N, i):
         f = f + (i**monomial[0])*monomial[2]* x^monomial[1]
     return f
 
-onesidephi(2, 34)
-onesidephi(3, 57*z + 84)
-onesidephi(5, 57*z + 84)
-onesidephi(3, 34)
-onesidephi(5, 34)
-
-
-def testsubgroup():
-#    A0, B0 = j_to_A_B( FF(24) )
-    E0 = EllipticCurve(FF, [0, 0, 0, 23, 7])
-    print E0
-    print "j-inv of E0: ", E0.j_invariant()
-    print "Number of points on E0: ", E0.count_points(1)
-    listpoints =  E0.points()
-
-    kerf = x + 25*z + 30
-    phi = EllipticCurveIsogeny(E0, kerf)  # generate an isogeny from kernel polynomial
-    Eprime = phi.codomain()
-    print "the isogeny:", phi, "\n the kernel poly:", phi.kernel_polynomial(), "\n The rational maps ", phi.rational_maps()
-    print "j-inv and the number-of-points of the image ", Eprime.j_invariant(), Eprime.count_points(1)
-    phi_dual = phi.dual()
-    print "the dual isogeny", phi_dual, "\n the kernel poly of the dual:", phi_dual.kernel_polynomial(), "\n The rational maps ", phi_dual.rational_maps()
-    for pos in listpoints[:40]:
-        print pos, pos.order(), phi(pos), phi(pos).order()
-
-testsubgroup()
-
-def testsubgroup2():
-#    A0, B0 = j_to_A_B( FF(24) )
-    E0 = EllipticCurve(FF, [0, 0, 0, 7*z+5, 70*z+62])
-    print E0
-    print "j-inv of E0: ", E0.j_invariant()
-    print "Number of points on E0: ", E0.count_points(1)
-    listpoints =  E0.points()
-
-    kerf = x - (98*z + 73)
-    phi = EllipticCurveIsogeny(E0, kerf)  # generate an isogeny from kernel polynomial
-    Eprime = phi.codomain()
-    print "the isogeny:", phi, "\n the kernel poly:", phi.kernel_polynomial(), "\n The rational maps ", phi.rational_maps()
-    print "j-inv and the number-of-points of the image ", Eprime.j_invariant(), Eprime.count_points(1)
-    phi_dual = phi.dual()
-    print "the dual isogeny", phi_dual, "\n the kernel poly of the dual:", phi_dual.kernel_polynomial(), "\n The rational maps ", phi_dual.rational_maps()
-    for pos in listpoints[:40]:
-        print pos, pos.order(), phi(pos), phi(pos).order()
-
-testsubgroup2()
+#onesidephi(2, 34)
+#onesidephi(3, 57*z + 84)
+#onesidephi(5, 57*z + 84)
+#onesidephi(3, 34)
+#onesidephi(5, 34)
 
 def findiso():
     A0, B0 = j_to_A_B( FF(24) )
@@ -110,3 +69,47 @@ def findiso():
         except (ValueError):
             continue
 #findiso()
+
+def testsubgroup():
+#    A0, B0 = j_to_A_B( FF(24) )
+    E0 = EllipticCurve(FF, [0, 0, 0, 23, 7])
+    print E0
+    print "j-inv of E0: ", E0.j_invariant()
+    print "Number of points on E0: ", E0.count_points(1)
+
+    kerf = x + 25*z + 30
+    phi = EllipticCurveIsogeny(E0, kerf)  # generate an isogeny from kernel polynomial
+    Eprime = phi.codomain()
+    print "the isogeny:", phi, "\n the kernel poly:", phi.kernel_polynomial(), "\n The rational maps ", phi.rational_maps()
+    print "\n j-inv and the number-of-points of the image ", Eprime.j_invariant(), Eprime.count_points(1)
+    phi_dual = phi.dual()
+    print "the dual isogeny", phi_dual, "\n the kernel poly of the dual:", phi_dual.kernel_polynomial(), "\n The rational maps ", phi_dual.rational_maps()
+
+    kerf2 = x + 100
+    phi2 = EllipticCurveIsogeny(E0, kerf2)  # generate an isogeny from kernel polynomial
+    print "the isogeny:", phi2, "\n the kernel poly:", phi2.kernel_polynomial(), "\n The rational maps ", phi2.rational_maps()
+
+    listpoints =  Eprime.points()
+    for pos in listpoints[41:80]:
+        print pos, pos.order(), phi2( phi_dual(pos) ), phi2( phi_dual(pos) ).order()
+
+testsubgroup()
+
+def testsubgroup2():
+    E0 = EllipticCurve(FF, [0, 0, 0, 7*z+5, 70*z+62])
+    print E0
+    print "\n j-inv of E0: ", E0.j_invariant()
+    print "Number of points on E0: ", E0.count_points(1)
+    listpoints =  E0.points()
+
+    kerf = x - (98*z + 73)
+    phi = EllipticCurveIsogeny(E0, kerf)  # generate an isogeny from kernel polynomial
+    Eprime = phi.codomain()
+    print "the isogeny:", phi, "\n the kernel poly:", phi.kernel_polynomial(), "\n The rational maps ", phi.rational_maps()
+    print "\n j-inv and the number-of-points of the image ", Eprime.j_invariant(), Eprime.count_points(1)
+#    phi_dual = phi.dual()
+#    print "the dual isogeny", phi_dual, "\n the kernel poly of the dual:", phi_dual.kernel_polynomial(), "\n The rational maps ", phi_dual.rational_maps()
+    for pos in listpoints[41:80]:
+        print pos, pos.order(), phi(pos), phi(pos).order()
+
+testsubgroup2()
