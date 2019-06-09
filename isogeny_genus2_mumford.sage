@@ -31,7 +31,7 @@ print YD, YD.factor()
 
 T1 = x^2 + 247*x + 67
 T2 = x^2 + 903*x + 350
-print T1.factor(), T2.factor()
+print "the kernels of the isogeny", T1.factor(), T2.factor()
 
 Y11 = JD([ x^2 - SXN(-510)/XD(-510)*x + PXN(-510)/XD(-510), (599-261*510)*(TYN(-510) + x*RYN(-510))/YD(-510)  ])
 Y12 = JD([ x^2 - SXN(-746)/XD(-746)*x + PXN(-746)/XD(-746), (599-261*746)*(TYN(-746) + x*RYN(-746))/YD(-746)  ])
