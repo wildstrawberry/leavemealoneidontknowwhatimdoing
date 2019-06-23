@@ -12,25 +12,24 @@ def example1():
 
 # https://hal.archives-ouvertes.fr/hal-01520262v2/document
 def example2():
-    q = 2333
-    FF = FiniteField(q)
-    RR.<x> = PolynomialRing(FF)
-    hy = 356*x^6 + 116*x^5 + 1589*x^4 + 986*x^3 + 178*x^2 + 1094*x + 1229
-    C = HyperellipticCurve(hy)
-    print C.frobenius_polynomial()
-    K.<z> = NumberField(C.frobenius_polynomial())
+    #q = 2333
+    #FF = FiniteField(q)
+    #RR.<x> = PolynomialRing(FF)
+    #hy = 356*x^6 + 116*x^5 + 1589*x^4 + 986*x^3 + 178*x^2 + 1094*x + 1229
+    #C = HyperellipticCurve(hy)
+    #print C.frobenius_polynomial()
+    K.<z> = NumberField( x^4 + 30*x^3 - 517*x^2 + 69990*x + 5442889 )
+    print K.subfields()
     RMK = K.maximal_totally_real_subfield()
     print RMK
-    print K.relative_polynomial()
-    y = polygen(QQ, 'y')
-    ke.<a, c> = NumberField([y^2 + 2, y^2 - 4638*y + 5372353])
-    print ke.absolute_polynomial()
-example2()
+#example2()
 
-# https://martindale.info/research/Thesis.pdf
-# K.<z> = NumberField(x^4 - 605104*x^3 - 5215893977257194*x^2 - 1622371429548014920304*x + 7188537318834090069340399032601)
-#K.<z> = NumberField(x^4 + 37*x^2 + 281)
-#print K.maximal_totally_real_subfield()
-# K.<z> = CyclotomicField(5)
-#print K.subfields()
+# https://martindale.info/research/Thesis.pdf, p49
+def example3():
+    # K.<z> = NumberField(x^4 - 605104*x^3 - 5215893977257194*x^2 - 1622371429548014920304*x + 7188537318834090069340399032601)
+    K.<z> = NumberField(x^2 - 37*x + 281)
+    print K
+    #K.<z> = CyclotomicField(5)
+    print K.subfields()
 # where is Q(sqrt(5))?
+example3()
