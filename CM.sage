@@ -19,9 +19,13 @@ def example2():
     C = HyperellipticCurve(hy)
     print C.frobenius_polynomial()
     K.<z> = NumberField(C.frobenius_polynomial())
-    #print K.subfields()
-    print K.maximal_totally_real_subfield()
-example1()
+    RMK = K.maximal_totally_real_subfield()
+    print RMK
+    print K.relative_polynomial()
+    y = polygen(QQ, 'y')
+    ke.<a, c> = NumberField([y^2 + 2, y^2 - 4638*y + 5372353])
+    print ke.absolute_polynomial()
+example2()
 
 # https://martindale.info/research/Thesis.pdf
 # K.<z> = NumberField(x^4 - 605104*x^3 - 5215893977257194*x^2 - 1622371429548014920304*x + 7188537318834090069340399032601)
