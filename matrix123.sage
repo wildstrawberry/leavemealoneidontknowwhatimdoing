@@ -1,36 +1,43 @@
-from sage.stats.distributions.discrete_gaussian_integer import DiscreteGaussianDistributionIntegerSampler
-from sage.modules.free_module_integer import IntegerLattice
+#from sage.stats.distributions.discrete_gaussian_integer import DiscreteGaussianDistributionIntegerSampler
+#from sage.modules.free_module_integer import IntegerLattice
 import random
-
 R = ZZ  # the base ring
 F2 = FiniteField(2)
 
-w=4
+def funfacts_symmatrix():
+    """ to verify Nick's equation """
+    R = Matrix(RR, [ [1, 1, 0], [2, 0, 1] ] )
+    M = R*(R.transpose())
+    print R
+    print M
+    I2 = matrix.identity(2)
+    A = M+I2
+    B = M+2*I2
+    C = B.inverse()
+    print A
+    print C
+    return A*A*(C) - (C)*A*A
 
-Iw = matrix.identity(w)
-Pw = Matrix(ZZ,[[ZZ(((i+1)%w)==j) for i in range(w)] for j in range(w)])  # some non-identity matrix P of dimension w
-Pinvw = Matrix(ZZ,[[ZZ(((i-1)%w)==j) for i in range(w)] for j in range(w)])  # P^{-1}
+def funfacts_unitary():
+    R = Matrix(RR, [ [1, 1, 1, 1], [1, 1, -1, -1], [1, -1, 1, -1], [1, -1, -1, 1] ] )
+    M = R*(R.transpose())
+    print R
+    print M
 
-print "I =", Iw
-print "P =", Pw
-print "Pinverse =", Pinvw
-print "P*P^{-1} =", Pw*Pinvw
+funfacts_unitary()
 
-Iw2 = matrix.identity(w)
-Pw2 = Matrix(F2,[[ZZ(((i+1)%w)==j) for i in range(w)] for j in range(w)])  # some non-identity matrix P of dimension w
-Pinvw2 = Matrix(F2,[[ZZ(((i-1)%w)==j) for i in range(w)] for j in range(w)])  # P^{-1}
+def ABB10(u0, u1, u2, u3):
+    """ the Full-rank-difference mapping in ABB10 """
+    M = Matrix(ZZ, [[u0, u1, u2, u3], [u3, u0-u3, u1, u2], [u2, u3-u2, u0-u3, u1], [u1, u2-u1, u3-u2, u0-u3]] )
+    return M
 
-print "I =", Iw2
-print "P =", Pw2
-print "Pinverse =", Pinvw2
-print "P*P^{-1} =", Pw2*Pinvw2
-
-print Iw2.charpoly(), Iw2.eigenvalues()
-print Pw2.charpoly(), Pw2.eigenvalues()
-
-
-#MMMM = block_matrix( [[Iw, Iw],[Iw, Iw]] )
-#NNNN = block_matrix( [[Iw, Pinvw],[Pw, Iw]] )
+def diff_ABB10(B):
+    """ experiments with ABB10 difference  """
+    M1 = ABB10(1, random.randint(-B, B), random.randint(-B, B), 0)
+    M2 = ABB10(1, random.randint(-B, B), random.randint(-B, B), 0)
+    print M1, M1.det()
+    print M2, M2.det()
+    print M1-M2, (M1-M2).det()
 
 
 def rand_full_rank_B(k,l,B):
@@ -40,16 +47,19 @@ def rand_full_rank_B(k,l,B):
         M = Matrix(ZZ,[[random.randint(-B, B) for i in range(l)] for j in range(k)])
     return M
 
-M1 = rand_full_rank_B(w,w,1)
-M1inv = M1^(-1)
-M2 = rand_full_rank_B(w,w,1)
-M2inv = M2^(-1)
-
-print M1, M1.charpoly()
-print M1inv, M1inv.charpoly()
-print M2, M2.charpoly()
-print M2inv, M2inv.charpoly()
-
-print (M1*M2).charpoly()
-
-print (M2*M1).charpoly()
+def toy():
+    w = 3
+    Iw = matrix.identity(w)
+    Pw = Matrix(ZZ,[[ZZ(((i+1)%w)==j) for i in range(w)] for j in range(w)])  # some non-identity matrix P of dimension w
+    Pinvw = Matrix(ZZ,[[ZZ(((i-1)%w)==j) for i in range(w)] for j in range(w)])  # P^{-1}
+    M1 = rand_full_rank_B(w,w,1)
+    M1inv = M1^(-1)
+    M2 = rand_full_rank_B(w,w,1)
+    M2inv = M2^(-1)
+    M3 = rand_full_rank_B(w,w,1)
+    print M1, M1.charpoly()
+    print M1inv, M1inv.charpoly()
+    print M2, M2.charpoly()
+    print M2inv, M2inv.charpoly()
+    print (M3*M1*M2).charpoly()
+    print (M3*M2*M1).charpoly()
