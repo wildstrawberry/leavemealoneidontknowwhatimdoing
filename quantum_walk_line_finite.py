@@ -7,8 +7,9 @@ import math
 import cmath
 import pylab
 
-STEPS = 200
-LEN = 2*STEPS+1
+WIDTH = 20
+STEPS = 100
+LEN = 2*STEPS
 
 def probabilities(posn):
     """Returns a list of the probabilies for each place."""
@@ -43,15 +44,16 @@ def shift(coin):
 # Initialise lists.
 posn = [[0, 0] for i in range(0, LEN)]
 
-posn[STEPS-40] = [0.5, 1j / 2]
-posn[STEPS+40] = [0.5, 1j / 2]
+posn[STEPS-WIDTH] = [0.5, 1j / 2]
+posn[STEPS+WIDTH] = [0.5, 1j / 2]
 
 # Run for some steps...
-for period in range(120):
-    for time in range(9):
+for period in range(60):
+    for time in range(20):
         posn = shift(Hadamard_Coin(posn))
     #    posn = shift(General_Coin(posn))
-    print period, sum(probabilities(posn)[STEPS-40: STEPS+40]), probabilities(posn)[STEPS-40], probabilities(posn)[STEPS+40]
+    prob_current = probabilities(posn)
+    print period, sum(prob_current[STEPS-WIDTH: STEPS+WIDTH]), max(prob_current), prob_current.index(max(prob_current)), prob_current.index(max(prob_current))>STEPS-WIDTH
     
 pylab.plot(range(0, LEN), probabilities(posn))
 pylab.show()
