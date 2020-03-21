@@ -1,4 +1,4 @@
-%martin's proposal
+#martin's proposal
 
 n = 256
 P.<x> = ZZ["x"]
@@ -12,7 +12,7 @@ h_ = h.change_ring(GF(q))
 H = matrix([((x^i*h_)%phi).coefficients() for i in range(n)])
 B = (identity_matrix(ZZ, n)).augment(H)
 B = B.stack(matrix(ZZ, n, n).augment(q*identity_matrix(ZZ, n)))
-B = B.LLL()
+B = B.LLL(delta=0.7)
 
 g_ = P(B[0][:n].list())  # some rotation of g
 f_ = (g_*h) % phi        # some rotation of f
