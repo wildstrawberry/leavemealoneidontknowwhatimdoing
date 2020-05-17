@@ -66,19 +66,41 @@ def diff_ABB10(B):
     print M2, M2.det()
     print M1-M2, (M1-M2).det()
 
-def toy():
-    w = 3
+
+def toy(w):
     Iw = matrix.identity(w)
-    Pw = Matrix(ZZ,[[ZZ(((i+1)%w)==j) for i in range(w)] for j in range(w)])  # some non-identity matrix P of dimension w
-    Pinvw = Matrix(ZZ,[[ZZ(((i-1)%w)==j) for i in range(w)] for j in range(w)])  # P^{-1}
-    M1 = rand_full_rank_B(w,w,1)
-    M1inv = M1^(-1)
-    M2 = rand_full_rank_B(w,w,1)
-    M2inv = M2^(-1)
-    M3 = rand_full_rank_B(w,w,1)
-    print M1, M1.charpoly()
-    print M1inv, M1inv.charpoly()
-    print M2, M2.charpoly()
-    print M2inv, M2inv.charpoly()
-    print (M3*M1*M2).charpoly()
-    print (M3*M2*M1).charpoly()
+    Aw = Matrix(RDF,[[ZZ(((i+1)%w)==j) for i in range(w)] for j in range(w)])  # a permutation matrix
+    Bw = Matrix(RDF,[[ZZ(((2*i+1)%w)==j) for i in range(w)] for j in range(w)]) # another permutation matrixw
+    print Aw*Bw*(Aw^(-1))*(Bw^(-1))
+    
+    M = block_matrix( [ [ Aw, Bw] ] )
+    print M 
+    SVD_M = M.SVD()[1]
+    for i in range(w):
+        print i, SVD_M[i][i]
+
+    LM = block_matrix( [ [ Bw^(-1)] , [Aw] ] )
+    print LM 
+    SVD_LM = LM.SVD()[1]
+    for i in range(w):
+        print i, SVD_LM[i][i]
+        
+    Y = M*LM
+    print Y
+    SVD_Y = Y.SVD()[1]
+    for i in range(w):
+        print i, SVD_Y[i][i]
+        
+    V = LM*M
+    print V
+    SVD_V = V.SVD()[1]
+    for i in range(2*w):
+        print i, SVD_V[i][i]
+        
+    Q = block_matrix( [ [ Aw, Bw ] , [ Aw^(-1)*Bw^(-1)*Aw*Bw, Aw*Bw*Aw^(-1)*Bw^(-1) ] ] )
+    print Q
+    SVD_Q = Q.SVD()[1]
+    for i in range(2*w):
+        print i, SVD_Q[i][i]
+
+toy(5)
