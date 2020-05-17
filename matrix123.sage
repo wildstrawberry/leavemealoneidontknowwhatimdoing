@@ -66,20 +66,19 @@ def diff_ABB10(B):
     print M2, M2.det()
     print M1-M2, (M1-M2).det()
 
-
 def toy(w):
     Iw = matrix.identity(w)
     Aw = Matrix(RDF,[[ZZ(((i+1)%w)==j) for i in range(w)] for j in range(w)])  # a permutation matrix
     Bw = Matrix(RDF,[[ZZ(((2*i+1)%w)==j) for i in range(w)] for j in range(w)]) # another permutation matrixw
     print Aw*Bw*(Aw^(-1))*(Bw^(-1))
     
-    M = block_matrix( [ [ Aw, Bw] ] )
+    M = block_matrix( [ [ Aw, Bw, Bw^(-1)] ] )
     print M 
     SVD_M = M.SVD()[1]
     for i in range(w):
         print i, SVD_M[i][i]
 
-    LM = block_matrix( [ [ Bw^(-1)] , [Aw] ] )
+    LM = block_matrix( [ [ Bw^(-1)], [Bw], [Aw] ] )
     print LM 
     SVD_LM = LM.SVD()[1]
     for i in range(w):
