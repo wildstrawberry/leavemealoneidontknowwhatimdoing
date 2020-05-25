@@ -65,6 +65,23 @@ def diff_ABB10(B):
     print M1, M1.det()
     print M2, M2.det()
     print M1-M2, (M1-M2).det()
+    
+def toy_pm(w):
+    Iw = matrix.identity(w)
+    Aw = Matrix(RDF,[[(-1)^ZZ( ((i+1)%w)==j ) for i in range(w)] for j in range(w)])  # a permutation matrix
+    Bw = Matrix(RDF,[[(-1)^ZZ( ((2*i+1)%w)==j) for i in range(w)] for j in range(w)]) # another permutation matrixw
+    print Aw
+    print Aw.SVD()[0]
+    SVD_A = Aw.SVD()[1]
+    for i in range(w):
+        print i, SVD_A[i][i]
+
+    print Bw
+    SVD_B = Bw.SVD()[1]
+    for i in range(w):
+        print i, SVD_B[i][i]
+
+toy_pm(5)
 
 def toy(w):
     Iw = matrix.identity(w)
