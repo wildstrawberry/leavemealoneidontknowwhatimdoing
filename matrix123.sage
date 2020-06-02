@@ -25,13 +25,21 @@ def rand_full_rank_B(k,l,B):
     return M
 
 def SVD_binary(dim):
-    """ experiments with ABB10 difference  """
     M = rand_full_rank_MatR(dim, dim)
     print M, M.det()
     print M.eigenvalues()
     print M.change_ring(RDF).SVD()
 
 SVD_binary(4)
+
+def SVD_pm(dim):
+    M = Matrix(RDF,[[(-1)^(random.randint(0, 1)) for i in range(dim)] for j in range(dim)])
+    print M, M.det(), M.rank()
+    #print "eigenvalues", M.eigenvalues()
+    #print "SVD:", M.SVD()
+    SVD_matrix = M.SVD()[1]
+    for i in range(dim):
+        print i, SVD_matrix[i][i]
 
 def funfacts_symmatrix():
     """ to verify Nick's equation """
