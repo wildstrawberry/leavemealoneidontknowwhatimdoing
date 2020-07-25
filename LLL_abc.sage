@@ -140,3 +140,18 @@ def preimage_toy(d, A, F):
         D.append(dc)
     MinZ = block_matrix(ZZ, 1,d,[ a for a in D ])
     return MinZ
+
+def GS_Gadget():
+    """ Gram-Schmidt of Gadget matrices   """
+    b = 17
+    B1 = Matrix(ZZ,[ [b-13,b-12,b-23,b-30,1],[b, -1, 0, 0, 0],[0, b, -1, 0, 0], [0,0,b, -1, 0 ], [0,0,0,b, 0 ] ])
+    L1 = IntegerLattice( B1 )
+    print "L1 = ", L1 # the basis in the output is already LLL reduced
+    G, M = B1.gram_schmidt()
+    for x in G:
+        print x, RR(x.norm())
+    B_LLL = Matrix(L1.basis())
+    print B_LLL
+    G_LLL, M_LLL = B_LLL.gram_schmidt()
+    for x in G_LLL:
+        print x, RR(x.norm())
