@@ -65,6 +65,18 @@ def test_LLL_toy():
     #print aList
 test_LLL_toy()
 
+def orthogonal(n, m, w):
+    """ given the basis of an lattice of the form [I, random], see its LLL reduced basis """
+    M = Matrix(ZZ,[[ (int(i==j) + random.randint(-w, w)*int(i>=n) )   for i in range(n+m)] for j in range(n)])
+    print(M)
+    L = IntegerLattice( M )
+    print("L = ", L) # already LLL reduced, oops
+    print(L.volume()^2)
+    x = L.shortest_vector()
+    print(x)
+
+orthogonal(20, 20, 2^16)
+
 def lattice_intersection():
     """ produce the intersection of two lattices by taking the dual, then the union, then the dual...oops there is a button """
     L1 = IntegerLattice( [ [2, -1, 0, 0, 0],[0, 2, -1, 0, 0], [0,0,2, -1, 0 ],[0,0,0,2, -1 ], [1,1,1,1,1] ]  )
