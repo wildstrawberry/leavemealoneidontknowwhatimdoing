@@ -40,6 +40,15 @@ def SVD_pm(dim):
     SVD_matrix = M.SVD()[1]
     for i in range(dim):
         print i, SVD_matrix[i][i]
+        
+def SVD_cpm(dim):
+    M = Matrix(CDF,[[(I)^(random.randint(1, 2)) for i in range(dim)] for j in range(dim)])
+    print  M.rank()
+    #print "eigenvalues", M.eigenvalues()
+    #print "SVD:", M.SVD()
+    SVD_matrix = M.SVD()[1]
+    for i in range(dim):
+        print i, SVD_matrix[i][i]
 
 def funfacts_symmatrix():
     """ to verify Nick's equation """
