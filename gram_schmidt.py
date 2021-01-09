@@ -1,6 +1,14 @@
 import numpy as np
 import math
 
+def Gaussian_pdf(x, mu, sigma):
+    x = float(x - mu) / sigma
+    return math.exp(-x*x/2.0) / math.sqrt(2.0*math.pi) / sigma
+
+def Gaussian_shift_n(x, mu, sigma, q):
+    # simulating Gaussian over integer mod q
+    return Gaussian_pdf(x, mu, sigma)+Gaussian_pdf(x-q, mu, sigma)+Gaussian_pdf(x+q, mu, sigma)+Gaussian_pdf(x-2*q, mu, sigma)+Gaussian_pdf(x+2*q, mu, sigma)
+
 # Gram-Schmidt Orthogonalization
 def gs(X, row_vecs=True, norm = False):
     if not row_vecs:
@@ -15,29 +23,18 @@ def gs(X, row_vecs=True, norm = False):
         return Y
     else:
         return Y.T
-
-def GS_prod_check(GS):
-    prod = 1
-    for gsv in GS.T:
-        prod*=np.linalg.norm(gsv)
-    return prod
-
-
-def Gaussian_pdf(x, mu, sigma):
-    x = float(x - mu) / sigma
-    return math.exp(-x*x/2.0) / math.sqrt(2.0*math.pi) / sigma
-
-
-def Gaussian_error_state_matrix(sigma, n):
-    M = np.matrix( [[(Gaussian_pdf(i, j, sigma)+Gaussian_pdf(i-n, j, sigma)+Gaussian_pdf(i+n, j, sigma)) for i in range(n)] for j in range(n)])
-    print(sigma, n)
-    print(M)
+    
+def Gaussian_error_state_matrix(sigma, q):
+    M = np.matrix( [[ Gaussian_shift_n(i, j, sigma, q) for i in range(q)] for j in range(q)])
+    print(sigma, q)
+    #print(M)
     return M
 
 if __name__ == "__main__":
-    B = 1.0
-    n = 17
-    GS = gs( Gaussian_error_state_matrix( B, n) )
-    print("norm of Gram_Schmidt(M)", [ np.linalg.norm(gsv) for gsv in GS ])
-    print("norm of GS(first row)/norm of GS(last row) ", np.linalg.norm(GS[0])/np.linalg.norm(GS[-1]) )
-
+    for db in range(1, 10):
+        for q in range(17, 18):
+            GS = gs( Gaussian_error_state_matrix( 1.5+0.0000000000014*db, q) )
+            print("norm of GS(first row)/norm of GS(last row) ", np.linalg.norm(GS[0])/np.linalg.norm(GS[-1]) )
+            print("norm of Gram_Schmidt(M)", [ np.linalg.norm(gsv) for gsv in GS ])
+            #print("norm of Gram_Schmidt(M), first 2 and last 2", np.linalg.norm(GS[0]), np.linalg.norm(GS[1]), np.linalg.norm(GS[-2]), np.linalg.norm(GS[-1]))
+            
