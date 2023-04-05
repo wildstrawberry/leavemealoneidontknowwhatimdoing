@@ -24,7 +24,9 @@ def LA_basis_gen(R, P, q, n, m):
     PI_nwide = block_matrix( [ [PI_n, PI_n, PI_n, PI_n] ] )
 
     MT = block_matrix( [ [RI_k, Z] , [P*M, PI_n], [ Pnoise1, Pnoise2] ] )
-    print(MT)
+    #print(MT)
+    #Gram = MT.T * MT
+    #print(Gram.det())
     L = IntegerLattice(MT)
     return L
 
@@ -48,18 +50,18 @@ def GS_length(q, G):
         print(x, RR(G[x].norm()), RR(G[x].norm())**2 )
 
 def main():
-    P = 10000
-    q = 427
+    P = 100
+    q = 27
     R = P*q
 
-    n = 40
-    m = n*5
+    n = 3
+    m = n*3
     L = LA_basis_gen(R, P, q, n, m)
     print(L)
 
     LM = Matrix(L.basis())
-    print(LM.det())
-    print( (P**(m-n)) * q**(m-2*n))
+    print("determinant:  ", LM.det())
+    print("det predicted:",  (P**(m-n)) * q**(m-2*n))
     G = Stable_GS(LM, RR)
     GS_length(m, G)
 main()
