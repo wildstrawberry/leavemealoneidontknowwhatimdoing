@@ -319,6 +319,30 @@ def tau_c_d(tau, c):
 
 
 
+def dlog(x,p):
+    """ brute force computation of discrete-log """
+    for j in range(p-1):
+        if (3**j)%p == x:
+            return j
+
+def multiplicative_char_qft(p):
+    """ experiment for the DFT of multiplicative char, in the Gauss sum paper page 2 to 4 """
+    q = p-1
+    mc = np.array( [ 0.0+0.0j for x in range(p)] )
+    for x in range(1, p):
+        #mc[x] = dlog(x,p) #cmath.exp( 2j*cmath.pi*(dlog(x,p))/q )
+        mc[x] = cmath.exp( 2j*cmath.pi*(dlog(x,p))/q )
+    print(mc)
+    return mc
+    FTmc = np.fft.fft(mc)
+    FTmc/=FTmc[1]
+    print(mc)
+    print(FTmc)
+
+#multiplicative_char_qft(5)
+
+
+
 '''
 # using the formula
     for x in range(-(r/2), r/2+1):
