@@ -2,12 +2,15 @@
 Tested with python 27. 
 """
 
+import time
 import math
 import cmath
 import random
 import numpy as np
-
+from numpy import linalg as LA
 import pylab
+import matplotlib.pyplot as plt
+from scipy import special
 
 IFPLOT = 1
 
@@ -342,21 +345,25 @@ def multiplicative_char_qft(p):
 #multiplicative_char_qft(5)
 
 
+def Hermitepoly(n, sqrtq):
 
-'''
-# using the formula
-    for x in range(-(r/2), r/2+1):
-        e = ((x*a)%r)
-        for i in range(m):
-            if e[i]>r/2:
-                e[i] = e[i]-r
-        t = np.inner(e, z)
-        #print e, t
-        mu+= t
-        ez+= cmath.exp( pi2j *t/(p*r) )
+    q = sqrtq**2
+    halfq = int(q/2)
+    p_monic = special.hermite(n, monic=True)
+    """ physicist's Hermite poly """
+    print(p_monic)
+    cc = np.array( [ 0.0 for i in range(q)] )
+    for i in range(-halfq, halfq):
+        cc[i] = p_monic(i/(sqrtq/math.sqrt(2*math.pi)) )*Gauss(i, sqrtq, 0)
 
-        if IFPLOT:
-            prob_p[(t/r)%p] +=1
-#            prob_p[ t%(p*r*m/4) ] +=1
-'''
+    cc/=normalizationf(cc)
 
+    FTcc = np.fft.fft(cc)*((1j)**n)
+    FTcc/=normalizationf(FTcc)
+    #print(FTHU)
+    plt.plot( range(0, q), cc )
+    plt.plot( range(0, q), FTcc )
+    plt.show()
+    plt.close()
+
+#Hermitepoly(3, 10)
